@@ -1,26 +1,29 @@
 {
   "IpAdress": "192.168.1.1",
+  "GWNo": 20,
   "StationNo": 1,
   "Station": [
     {
-      "Name": "步骤1",
-      "Type": 1
+      "Name": "启动扫码流程",
+      "Type": 10
     },
     {
-      "Name": "步骤2",
-      "Type": 1
+      "Name": "气缸夹紧",
+      "Type": 20
     },
     {
-      "Name": "步骤2",
-      "Type": 1
+      "Name": "启动拧紧枪流程",
+      "Type": 100
     },
     {
-      "Name": "步骤3",
-      "Type": 1
+      "Name": "气缸松开",
+      "Type": 110
     }
   ],
   "GunNo": 1,
   "ProductNo": 1,
-  "ProductType":"VW326 40%黑 座椅骨架总成",
-  "BarRule":"3264536"
+  "ProductType": "VW326 40%黑 座椅骨架总成",
+  "BarRule": "3264536",
+  "BarNo": 1,
+  "ImageUri": "C:\\Users\\Administrator\\Desktop\\cs.png"
 }
