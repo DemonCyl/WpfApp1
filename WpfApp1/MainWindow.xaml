@@ -187,6 +187,10 @@
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="243" Canvas.Left="47" Canvas.Top="208"/>
                 <TextBlock x:Name="Step10" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="243" Canvas.Left="47" Canvas.Top="226"/>
+                <TextBlock x:Name="Step11" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="243" Canvas.Left="47" Canvas.Top="244"/>
+                <TextBlock x:Name="Step12" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="243" Canvas.Left="47" Canvas.Top="262"/>
 
                 <Image x:Name="StepImage1" Width="15" Height="13" Canvas.Left="18" Canvas.Top="64"></Image>
                 <Image x:Name="StepImage2" Width="15" Height="13" Canvas.Left="18" Canvas.Top="82"/>
@@ -198,6 +202,8 @@
                 <Image x:Name="StepImage8" Width="15" Height="13" Canvas.Left="18" Canvas.Top="190"/>
                 <Image x:Name="StepImage9" Width="15" Height="13" Canvas.Left="18" Canvas.Top="208"/>
                 <Image x:Name="StepImage10" Width="15" Height="13" Canvas.Left="18" Canvas.Top="226"/>
+                <Image x:Name="StepImage11" Width="15" Height="13" Canvas.Left="18" Canvas.Top="244"/>
+                <Image x:Name="StepImage12" Width="15" Height="13" Canvas.Left="18" Canvas.Top="262"/>
                 <Canvas Width="126" Height="50"  Canvas.Left="5" Canvas.Top="4" Background="White">
                     <Image x:Name="Logo" Width="126" Height="50"  />
                 </Canvas>
