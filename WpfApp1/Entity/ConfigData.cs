@@ -13,6 +13,7 @@ namespace WpfApp1.Entity
 
         public string IpAdress { get; set; }
 
+        public int GWNo { get; set; }
         public int StationNo { get; set; }
 
 
@@ -24,5 +25,9 @@ namespace WpfApp1.Entity
         public string ProductType { get; set; }
 
         public string BarRule { get; set; }
+
+        public int BarNo { get; set; }
+
+        public string ImageUri { get; set; }
     }
 }

@@ -35,11 +35,12 @@ namespace WpfApp1
         private GetInfoService service = new GetInfoService();
         private DispatcherTimer ShowTimer;
         private ConfigData config;
+        private BarCodeStr codeStr;
         private Plc plc;
         private GDbStr GunStr;
         private int markN = 0;
         private List<GDbData> ReList = new List<GDbData>();
-        private static BitmapImage IStation = new BitmapImage(new Uri("C:\\Users\\Administrator\\Desktop\\cs.png", UriKind.Absolute));
+        //private static BitmapImage IStation = new BitmapImage(new Uri("C:\\Users\\Administrator\\Desktop\\cs.png", UriKind.Absolute));  //"C:\\Users\\Administrator\\Desktop\\cs.png", UriKind.Absolute
         private static BitmapImage ILogo = new BitmapImage(new Uri("/Images/logo.png", UriKind.Relative));
         private static BitmapImage IFalse = new BitmapImage(new Uri("/Images/01.png", UriKind.Relative));
         private static BitmapImage ITrue = new BitmapImage(new Uri("/Images/02.png", UriKind.Relative));
@@ -56,8 +57,7 @@ namespace WpfApp1
             this.Width = rc.Width;
             this.Height = rc.Height;
             #endregion
-            pImage.Source = IStation;
-            Logo.Source = ILogo;
+            
 
             //读取本地配置JSON文件
             LoadJsonData();
@@ -96,6 +96,8 @@ namespace WpfApp1
             ReList.Clear();
             ZongType.Text = config.ProductType;
             BarRule.Text = config.BarRule;
+            pImage.Source = new BitmapImage(new Uri(config.ImageUri, UriKind.Absolute)); ;
+            Logo.Source = ILogo;
 
         }
 
@@ -111,7 +113,7 @@ namespace WpfApp1
                     markN = 0;
                 }
                 markN += 1;
-                ReList.Add(new GDbData(markN, 20.3, 65.5, "ok"));
+                ReList.Add(new GDbData(markN, 20.3, 65.5, "True"));
                 ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
                 DataList.ItemsSource = null;
                 DataList.ItemsSource = ReList;
@@ -128,7 +130,7 @@ namespace WpfApp1
             {
                 //读取PLC工序步骤状态
                 var sta = ((uint)plc.Read(service.GetStaStr(config.StationNo))).ConvertToInt();
-                ModifyStep(sta);
+                ModifyStep(sta, config.GWNo);
 
                 //型号获取
                 var type = ((uint)plc.Read(service.GetTypeStr(config.ProductNo))).ConvertToInt();
@@ -143,7 +145,25 @@ namespace WpfApp1
                     default: break;
                 }
 
-                //拧紧枪数据获取
+                //BarCode Get
+                codeStr = service.GetBarCodeStr(config.BarNo);
+                var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
+                var BarResult = (bool)plc.Read(codeStr.ResultStr);
+                //var cMark = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 5); //mark
+                if (!temp.IsNullOrEmpty() )
+                {
+                    Barcode.Text = temp;
+                    if (BarResult)
+                    {
+                        BarYz.Text = "比对成功";
+                    }
+                    else
+                    {
+                        BarYz.Text = "比对失败";
+                    }
+                }
+
+                #region 拧紧枪数据获取
                 GunStr = service.GetGunStr(config.GunNo);
                 var torque = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
                 var angle = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
@@ -165,8 +185,11 @@ namespace WpfApp1
                     //mark
                     plc.Write(GunStr.TorqueStr, mark.ConvertToUInt());
                 }
+                #endregion
+
+
             };
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(50);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
             dispatcherTimer.Start();
         }
 
@@ -330,53 +353,56 @@ namespace WpfApp1
             #endregion
         }
 
-        private void ModifyStep(int type)
+        private void ModifyStep(int type, int GWNo)
         {
-            switch (type)
+            switch (GWNo)
             {
-                case 1:
-                    StepImage1.Source = ITrue;
+                case 20: //20工位
+                    switch (type)
+                    {
+                        case 10:
+                            StepImage1.Source = ITrue;
+                            StepImage2.Source = IFalse;
+                            StepImage3.Source = IFalse;
+                            StepImage4.Source = IFalse;
+                            break;
+                        case 20:
+                            StepImage2.Source = ITrue;
+                            break;
+                        case 100:
+                            StepImage3.Source = ITrue;
+                            break;
+                        case 110:
+                            StepImage4.Source = ITrue;
+                            break;
+                    }
                     break;
-                case 2:
-                    StepImage2.Source = ITrue;
-                    break;
-                case 3:
-                    StepImage3.Source = ITrue;
-                    break;
-                case 4:
-                    StepImage4.Source = ITrue;
-                    break;
-                case 5:
-                    StepImage5.Source = ITrue;
-                    break;
-                case 6:
-                    StepImage6.Source = ITrue;
-                    break;
-                case 7:
-                    StepImage7.Source = ITrue;
-                    break;
-                case 8:
-                    StepImage8.Source = ITrue;
-                    break;
-                case 9:
-                    StepImage9.Source = ITrue;
-                    break;
-                case 10:
-                    StepImage10.Source = ITrue;
-                    break;
-                default:
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    StepImage7.Source = IFalse;
-                    StepImage8.Source = IFalse;
-                    StepImage9.Source = IFalse;
-                    StepImage10.Source = IFalse;
+                case 40: //40工位
+                    switch (type)
+                    {
+                        case 10:
+                            StepImage1.Source = ITrue;
+                            StepImage2.Source = IFalse;
+                            StepImage3.Source = IFalse;
+                            StepImage4.Source = IFalse;
+                            StepImage5.Source = IFalse;
+                            break;
+                        case 20:
+                            StepImage2.Source = ITrue;
+                            break;
+                        case 30:
+                            StepImage3.Source = ITrue;
+                            break;
+                        case 35:
+                            StepImage4.Source = ITrue;
+                            break;
+                        case 40:
+                            StepImage5.Source = ITrue;
+                            break;
+                    }
                     break;
             }
+
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

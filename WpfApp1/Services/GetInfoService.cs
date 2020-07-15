@@ -130,5 +130,14 @@ using Entity;
             }
             return str;
         }
+
+        public BarCodeStr GetBarCodeStr(int value)
+        {
+            var tmp = value+1;
+            BarCodeStr str = new BarCodeStr();
+            str.BarStr = value*100+10;
+            str.ResultStr = "DB2000.DBX"+tmp+"08.0";
+            return str;
+        }
     }
 }
