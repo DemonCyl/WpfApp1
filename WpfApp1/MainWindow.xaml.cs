@@ -57,13 +57,19 @@ namespace WpfApp1
             this.Width = rc.Width;
             this.Height = rc.Height;
             #endregion
-            
+
 
             //读取本地配置JSON文件
             LoadJsonData();
             Init();
-            MainPageLoad();
-            plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
+            //MainPageLoad();
+            plc = new Plc(CpuType.S71500, config.IpAdress, 0, 1);
+            switch (config.GWNo)
+            {
+                case 20:
+                    TM_Copy.Text = "CC特性：\r\n \r\n       9 + 1 Nm \r\n       25 + 3 Nm";
+                    break;
+            }
 
             var result = plc.Open();
             if (!plc.IsConnected)
@@ -119,7 +125,7 @@ namespace WpfApp1
                 DataList.ItemsSource = ReList;
                 DataList.Items.Refresh();
             };
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1000);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
             dispatcherTimer.Start();
         }
 
@@ -129,11 +135,12 @@ namespace WpfApp1
             dispatcherTimer.Tick += (s, e) =>
             {
                 //读取PLC工序步骤状态
-                var sta = ((uint)plc.Read(service.GetStaStr(config.StationNo))).ConvertToInt();
+                var stt = plc.Read(service.GetStaStr(config.StationNo));
+                var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo)); //rvice.GetStaStr(config.StationNo)));
                 ModifyStep(sta, config.GWNo);
 
                 //型号获取
-                var type = ((uint)plc.Read(service.GetTypeStr(config.ProductNo))).ConvertToInt();
+                var type = (ushort)plc.Read(service.GetTypeStr(config.ProductNo));
                 switch (type)
                 {
                     case 1:
@@ -146,50 +153,91 @@ namespace WpfApp1
                 }
 
                 //BarCode Get
-                codeStr = service.GetBarCodeStr(config.BarNo);
-                var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
-                var BarResult = (bool)plc.Read(codeStr.ResultStr);
-                //var cMark = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 5); //mark
-                if (!temp.IsNullOrEmpty() )
+                int k = 1;
+                Barcode1.Text = "";
+                Barcode2.Text = "";
+                Barcode3.Text = "";
+                BarYz.Text = "";
+                for (int i = 1; i <= config.BarNo; i++)
                 {
-                    Barcode.Text = temp;
-                    if (BarResult)
+                    if (i == k)
                     {
-                        BarYz.Text = "比对成功";
-                    }
-                    else
-                    {
-                        BarYz.Text = "比对失败";
+
+                        codeStr = service.GetBarCodeStr(k);
+                        var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
+                        temp = temp.Trim();
+                        var BarResult = (bool)plc.Read(codeStr.ResultStr);
+                        if (!temp.IsNullOrEmpty())
+                        {
+                            switch (i)
+                            {
+                                case 1:
+                                    Barcode1.Text = temp;
+                                    break;
+                                case 2:
+                                    Barcode2.Text = temp;
+                                    break;
+                                case 3:
+                                    Barcode3.Text = temp;
+                                    break;
+                            }
+                            if (BarResult)
+                            {
+                                BarYz.Text = "比对成功";
+                            }
+                            else
+                            {
+                                BarYz.Text = "比对失败";
+                            }
+                            k += 1;
+                        }
                     }
                 }
+                //while (k<=config.BarNo)
+                //{
+                //}
+
 
                 #region 拧紧枪数据获取
-                GunStr = service.GetGunStr(config.GunNo);
-                var torque = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
-                var angle = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
-                var result = (bool)plc.Read(GunStr.ResultStr);
 
-                if (torque != mark && torque != 0) //做标记
+                for (int i = 1; i <= config.GunNo; i++)
                 {
-                    if (markN == 50)
+                    GunStr = service.GetGunStr(i);
+                    var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
+                    torque1 = double.Parse(torque1.ToString("F2"));
+                    var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
+                    angle1 = double.Parse(angle1.ToString("F2"));
+                    var result1 = (bool)plc.Read(GunStr.ResultStr);
+                    string rest;
+                    if (torque1 != 0) 
                     {
-                        ReList.Clear();
-                        markN = 0;
+                        if (i == 1)
+                        {
+                            ReList.Clear();
+                            markN = 0;
+                        }
+                        if (result1)
+                        {
+                            rest = "OK";
+                        }
+                        else
+                        {
+                            rest = "NG";
+                        }
+                        markN += 1;
+                        ReList.Add(new GDbData(markN, torque1, angle1, rest));
+                        ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
+                        DataList.ItemsSource = null;
+                        DataList.ItemsSource = ReList;
+                        DataList.Items.Refresh();
+                        //mark
                     }
-                    markN += 1;
-                    ReList.Add(new GDbData(markN, torque, angle, result.ToString()));
-                    ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
-                    DataList.ItemsSource = null;
-                    DataList.ItemsSource = ReList;
-                    DataList.Items.Refresh();
-                    //mark
-                    plc.Write(GunStr.TorqueStr, mark.ConvertToUInt());
                 }
                 #endregion
 
 
             };
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(2);
             dispatcherTimer.Start();
         }
 
@@ -412,18 +460,20 @@ namespace WpfApp1
                     {
                         case 10:
                             StepImage1.Source = ITrue;
-                            StepImage2.Source = IFalse;
+                            StepImage2.Source = ITrue;
                             StepImage3.Source = IFalse;
                             StepImage4.Source = IFalse;
+                            StepImage5.Source = IFalse;
                             break;
                         case 20:
-                            StepImage2.Source = ITrue;
+                            StepImage3.Source = ITrue;
                             break;
                         case 100:
                             StepImage3.Source = ITrue;
+                            StepImage4.Source = ITrue;
                             break;
                         case 110:
-                            StepImage4.Source = ITrue;
+                            StepImage5.Source = ITrue;
                             break;
                     }
                     break;
@@ -452,7 +502,7 @@ namespace WpfApp1
                     }
                     break;
                 case 04052:
-                    switch(type)
+                    switch (type)
                     {
                         case 100:
                             StepImage1.Source = IFalse;
@@ -461,6 +511,9 @@ namespace WpfApp1
                             StepImage4.Source = IFalse;
                             StepImage5.Source = IFalse;
                             StepImage6.Source = IFalse;
+                            StepImage7.Source = IFalse;
+                            StepImage8.Source = IFalse;
+                            StepImage9.Source = IFalse;
                             break;
                         case 200:
                             StepImage1.Source = ITrue;
@@ -468,17 +521,26 @@ namespace WpfApp1
                         case 300:
                             StepImage2.Source = ITrue;
                             break;
-                        case 1100:
+                        case 500:
                             StepImage3.Source = ITrue;
                             break;
-                        case 1200:
+                        case 700:
                             StepImage4.Source = ITrue;
                             break;
-                        case 1300:
+                        case 900:
                             StepImage5.Source = ITrue;
                             break;
-                        case 1400:
+                        case 1100:
                             StepImage6.Source = ITrue;
+                            break;
+                        case 1200:
+                            StepImage7.Source = ITrue;
+                            break;
+                        case 1300:
+                            StepImage8.Source = ITrue;
+                            break;
+                        case 1400:
+                            StepImage9.Source = ITrue;
                             break;
                     }
                     break;

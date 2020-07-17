@@ -29,7 +29,7 @@
                         </LinearGradientBrush>
                     </Border.BorderBrush>
                 </Border>
-                <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="112" Width="202" Canvas.Top="327" Canvas.Left="335">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="112" Width="181" Canvas.Top="327" Canvas.Left="335">
                     <Border.BorderBrush>
                         <LinearGradientBrush SpreadMethod="Repeat" StartPoint="0, 5" EndPoint="5, 0" MappingMode="Absolute">
                             <LinearGradientBrush.GradientStops>
@@ -54,11 +54,11 @@
                         </GridView>
                     </ListView.View>
                 </ListView>-->
-                <DataGrid  Width="303" Height="112" x:Name="DataList" GridLinesVisibility="None"  HeadersVisibility="Column"
+                <DataGrid  Width="184" Height="112" x:Name="DataList" GridLinesVisibility="None"  HeadersVisibility="Column"
                     pu:DataGridHelper.HeaderMinHeight="20" IsReadOnly="True" BorderThickness="2"  FontSize="11"
                     pu:DataGridHelper.RowMinHeight="20"  FontFamily="Microsoft Yahei" Foreground="#F0E68C"
                     pu:DataGridHelper.ColumnHorizontalContentAlignment="Center" RowBackground="Transparent"
-                     CanUserAddRows="False" Canvas.Left="537" Canvas.Top="327" >
+                     CanUserAddRows="False" Canvas.Left="656" Canvas.Top="327" >
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -139,13 +139,13 @@
                 <Label Canvas.Left="335" Canvas.Top="376" Content="条码验证:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
 
                 <!--当前计划编号:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="8"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="当前计划编号:" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="8"/>
                 <!--计划设定时间:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="31"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="计划设定时间:" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="31"/>
                 <!--计划总数:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="8"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="计划总数:" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="8"/>
                 <!--当前产量:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="31"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="当前产量:" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="31"/>
 
                 <TextBlock x:Name="PlanNo" HorizontalAlignment="Left" Grid.Row="3" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                            TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="154" Canvas.Left="221" Canvas.Top="12"/>
@@ -156,12 +156,12 @@
                 <TextBlock x:Name="Output" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="83" Canvas.Left="433" Canvas.Top="36"/>
                 <TextBlock x:Name="ZongType" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="201" Canvas.Left="47" Canvas.Top="353"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="200" Canvas.Left="17" Canvas.Top="353"/>
                 <TextBlock x:Name="XingHao" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="154" Canvas.Left="62" Canvas.Top="380"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="50" Canvas.Left="62" Canvas.Top="380"/>
                 <TextBlock x:Name="Data" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="154" Canvas.Left="62" Canvas.Top="408"/>
-                <TextBlock x:Name="Barcode" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="50" Canvas.Left="62" Canvas.Top="408"/>
+                <TextBlock x:Name="Barcode1" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="336"/>
                 <TextBlock x:Name="BarRule" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="28" Width="129" Canvas.Left="351" Canvas.Top="348"/>
@@ -210,6 +210,12 @@
                 <TextBlock x:Name="PLCSta" HorizontalAlignment="Center" Foreground="#F0E68C" FontFamily="Microsoft Yahei"
                     TextWrapping="Wrap" Text="PLC状态" VerticalAlignment="Center" Height="16" Width="53" Canvas.Left="556" Canvas.Top="12"/>
                 <Image x:Name="PLCImage" Width="15" Height="13" Canvas.Left="579" Canvas.Top="33"/>
+                <TextBlock x:Name="Barcode2" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="376"/>
+                <TextBlock x:Name="Barcode3" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="394"/>
+                <TextBlock x:Name="TM_Copy" HorizontalAlignment="Left" Background="Yellow" Foreground="Black" FontFamily="Microsoft Yahei" FontSize="14"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="111" Width="141" Canvas.Left="515" Canvas.Top="328"/>
                 <!--<ListView x:Name="listView_Copy" ItemsSource="{Binding .}" Canvas.Top="64" Height="264" Width="40" Background="#EE3BABFF" FontFamily="Microsoft Yahei" Canvas.Left="10" Foreground="White" >
                     <ListView.Resources>
                         <Style TargetType="{x:Type GridViewColumnHeader}" >
