@@ -18,16 +18,27 @@ namespace WpfApp1.Entity
 
 
         public List<StationData> Station { get; set; }
+        /// <summary>
+        /// 拧紧枪数据起始位置
+        /// </summary>
         public int GunNo { get; set; }
+
+        /// <summary>
+        /// 拧紧枪数据总数
+        /// </summary>
+        public int GunCount { get; set; }
 
         public int ProductNo { get; set; }
 
-        public string ProductType { get; set; }
-
-        public string BarRule { get; set; }
-
+        /// <summary>
+        /// 条码起始位置
+        /// </summary>
         public int BarNo { get; set; }
 
+        /// <summary>
+        /// 条码总数
+        /// </summary>
+        public int BarCount { get; set; }
         public string ImageUri { get; set; }
     }
 }

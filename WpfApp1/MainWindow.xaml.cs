@@ -63,23 +63,43 @@ namespace WpfApp1
             LoadJsonData();
             Init();
             //MainPageLoad();
-            plc = new Plc(CpuType.S71500, config.IpAdress, 0, 1);
+            plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
             switch (config.GWNo)
             {
                 case 20:
                     TM_Copy.Text = "CC特性：\r\n \r\n       9 + 1 Nm \r\n       25 + 3 Nm";
                     break;
+                case 04052:
+                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
+                    break;
+                case 04053:
+                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
+                    break;
+                case 04061:
+                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n       ";
+                    break;
+                case 04063:
+                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n       ";
+                    break;
             }
 
-            var result = plc.Open();
-            if (!plc.IsConnected)
+            if (plc.IsAvailable)
             {
-                PLCImage.Source = IFalse;
+
+                var result = plc.Open();
+                if (!plc.IsConnected)
+                {
+                    PLCImage.Source = IFalse;
+                }
+                else
+                {
+                    PLCImage.Source = ITrue;
+                    DataReload();
+                }
             }
             else
             {
-                PLCImage.Source = ITrue;
-                DataReload();
+                PLCImage.Source = IFalse;
             }
 
         }
@@ -100,8 +120,6 @@ namespace WpfApp1
             SetStepData(count, config.Station);
 
             ReList.Clear();
-            ZongType.Text = config.ProductType;
-            BarRule.Text = config.BarRule;
             pImage.Source = new BitmapImage(new Uri(config.ImageUri, UriKind.Absolute)); ;
             Logo.Source = ILogo;
 
@@ -113,17 +131,22 @@ namespace WpfApp1
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (s, e) =>
             {
-                if (markN == 50)
+                ReList.Clear();
+                for (int i = 1; i <= config.GunCount; i++)
                 {
-                    ReList.Clear();
-                    markN = 0;
+                    if (i == 1)
+                    {
+                        ReList.Clear();
+                        markN = 0;
+                    }
+                    markN += 1;
+                    ReList.Add(new GDbData(markN, 32, 44.5, "OK"));
+                    ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
+                    DataList.ItemsSource = null;
+                    DataList.ItemsSource = ReList;
+                    DataList.Items.Refresh();
+
                 }
-                markN += 1;
-                ReList.Add(new GDbData(markN, 20.3, 65.5, "True"));
-                ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
-                DataList.ItemsSource = null;
-                DataList.ItemsSource = ReList;
-                DataList.Items.Refresh();
             };
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
             dispatcherTimer.Start();
@@ -136,7 +159,7 @@ namespace WpfApp1
             {
                 //读取PLC工序步骤状态
                 var stt = plc.Read(service.GetStaStr(config.StationNo));
-                var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo)); //rvice.GetStaStr(config.StationNo)));
+                var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo)); //service.GetStaStr(config.StationNo)));
                 ModifyStep(sta, config.GWNo);
 
                 //型号获取
@@ -153,84 +176,91 @@ namespace WpfApp1
                 }
 
                 //BarCode Get
-                int k = 1;
-                Barcode1.Text = "";
-                Barcode2.Text = "";
-                Barcode3.Text = "";
-                BarYz.Text = "";
-                for (int i = 1; i <= config.BarNo; i++)
+                if (config.BarCount > 0)
                 {
-                    if (i == k)
+                    int k = config.BarNo;  //adress get;
+                    Barcode1.Text = "";
+                    Barcode2.Text = "";
+                    Barcode3.Text = "";
+                    Barcode4.Text = "";
+                    BarYz.Text = "";
+                    for (int i = 1; i <= config.BarCount; i++)
                     {
-
-                        codeStr = service.GetBarCodeStr(k);
-                        var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
-                        temp = temp.Trim();
-                        var BarResult = (bool)plc.Read(codeStr.ResultStr);
-                        if (!temp.IsNullOrEmpty())
+                        var i1 = i + k - 1;
+                        if (i1 == k)
                         {
-                            switch (i)
+                            codeStr = service.GetBarCodeStr(k);
+                            var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
+                            temp = temp.Trim();
+                            var BarResult = (bool)plc.Read(codeStr.ResultStr);
+                            if (!temp.IsNullOrEmpty())
                             {
-                                case 1:
-                                    Barcode1.Text = temp;
-                                    break;
-                                case 2:
-                                    Barcode2.Text = temp;
-                                    break;
-                                case 3:
-                                    Barcode3.Text = temp;
-                                    break;
+                                switch (i)
+                                {
+                                    case 1:
+                                        Barcode1.Text = temp;
+                                        break;
+                                    case 2:
+                                        Barcode2.Text = temp;
+                                        break;
+                                    case 3:
+                                        Barcode3.Text = temp;
+                                        break;
+                                    case 4:
+                                        Barcode4.Text = temp;
+                                        break;
+                                }
+                                if (BarResult)
+                                {
+                                    BarYz.Text = "比对成功";
+                                }
+                                else
+                                {
+                                    BarYz.Text = "比对失败";
+                                }
+                                k += 1;
                             }
-                            if (BarResult)
-                            {
-                                BarYz.Text = "比对成功";
-                            }
-                            else
-                            {
-                                BarYz.Text = "比对失败";
-                            }
-                            k += 1;
                         }
                     }
                 }
-                //while (k<=config.BarNo)
-                //{
-                //}
 
 
                 #region 拧紧枪数据获取
-
-                for (int i = 1; i <= config.GunNo; i++)
+                ReList.Clear();
+                if (config.GunCount > 0)
                 {
-                    GunStr = service.GetGunStr(i);
-                    var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
-                    torque1 = double.Parse(torque1.ToString("F2"));
-                    var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
-                    angle1 = double.Parse(angle1.ToString("F2"));
-                    var result1 = (bool)plc.Read(GunStr.ResultStr);
-                    string rest;
-                    if (torque1 != 0) 
+                    for (int i = 1; i <= config.GunCount; i++)
                     {
-                        if (i == 1)
+                        var i1 = i + config.GunNo - 1;
+                        GunStr = service.GetGunStr(i1);
+                        var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
+                        torque1 = double.Parse(torque1.ToString("F2"));
+                        var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
+                        angle1 = double.Parse(angle1.ToString("F2"));
+                        var result1 = (bool)plc.Read(GunStr.ResultStr);
+                        string rest;
+                        if (torque1 != 0)
                         {
-                            ReList.Clear();
-                            markN = 0;
+                            if (i == 1)
+                            {
+                                ReList.Clear();
+                                markN = 0;
+                            }
+                            if (result1)
+                            {
+                                rest = "OK";
+                            }
+                            else
+                            {
+                                rest = "NG";
+                            }
+                            markN += 1;
+                            ReList.Add(new GDbData(markN, torque1, angle1, rest));
+                            ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
+                            DataList.ItemsSource = null;
+                            DataList.ItemsSource = ReList;
+                            DataList.Items.Refresh();
                         }
-                        if (result1)
-                        {
-                            rest = "OK";
-                        }
-                        else
-                        {
-                            rest = "NG";
-                        }
-                        markN += 1;
-                        ReList.Add(new GDbData(markN, torque1, angle1, rest));
-                        ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
-                        DataList.ItemsSource = null;
-                        DataList.ItemsSource = ReList;
-                        DataList.Items.Refresh();
-                        //mark
                     }
                 }
                 #endregion
