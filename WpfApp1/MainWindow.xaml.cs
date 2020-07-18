@@ -589,6 +589,7 @@ namespace WpfApp1
                             StepImage9.Source = IFalse;
                             StepImage10.Source = IFalse;
                             StepImage11.Source = IFalse;
+                            StepImage12.Source = IFalse;
                             break;
                         case 200:
                             StepImage1.Source = ITrue;
@@ -596,32 +597,35 @@ namespace WpfApp1
                         case 250:
                             StepImage2.Source = ITrue;
                             break;
-                        case 300:
+                        case 260:
                             StepImage3.Source = ITrue;
                             break;
-                        case 400:
+                        case 300:
                             StepImage4.Source = ITrue;
                             break;
-                        case 500:
+                        case 400:
                             StepImage5.Source = ITrue;
                             break;
-                        case 600:
+                        case 500:
                             StepImage6.Source = ITrue;
                             break;
-                        case 700:
+                        case 600:
                             StepImage7.Source = ITrue;
                             break;
-                        case 750:
+                        case 700:
                             StepImage8.Source = ITrue;
                             break;
-                        case 800:
+                        case 750:
                             StepImage9.Source = ITrue;
+                            break;
+                        case 800:
+                            StepImage10.Source = ITrue;
                             break;
                         case 900:
                             StepImage10.Source = ITrue;
                             break;
                         case 1000:
-                            StepImage11.Source = ITrue;
+                            StepImage12.Source = ITrue;
                             break;
                     }
                     break;
