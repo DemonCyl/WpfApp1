@@ -62,7 +62,7 @@ namespace WpfApp1
             //读取本地配置JSON文件
             LoadJsonData();
             Init();
-            //MainPageLoad();
+            //MainPlanLoad();
             plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
             switch (config.GWNo)
             {
@@ -109,6 +109,7 @@ namespace WpfApp1
         /// </summary>
         private void Init()
         {
+
             #region 时间定时器
             ShowTimer = new System.Windows.Threading.DispatcherTimer();
             ShowTimer.Tick += new EventHandler(ShowTimer1);
@@ -125,28 +126,21 @@ namespace WpfApp1
 
         }
 
-        private void MainPageLoad()
+        /// <summary>
+        /// 预留主线 计划xxx信息读取
+        /// </summary>
+        private void MainPlanLoad()
         {
             //定时查询-定时器
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (s, e) =>
             {
-                ReList.Clear();
-                for (int i = 1; i <= config.GunCount; i++)
-                {
-                    if (i == 1)
-                    {
-                        ReList.Clear();
-                        markN = 0;
-                    }
-                    markN += 1;
-                    ReList.Add(new GDbData(markN, 32, 44.5, "OK"));
-                    ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
-                    DataList.ItemsSource = null;
-                    DataList.ItemsSource = ReList;
-                    DataList.Items.Refresh();
 
-                }
+                PlanNo.Text = "123";
+                PlanTime.Text = "123";
+                PlanSum.Text = "2";
+                Output.Text = "";
+                ZongType.Text = "";
             };
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
             dispatcherTimer.Start();
