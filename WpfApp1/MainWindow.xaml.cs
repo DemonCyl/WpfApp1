@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Panuon.UI.Silver;
-//using OpenApi;
 using Panuon.UI.Silver.Core;
 using System.Windows.Threading;
 using S7.Net;
@@ -100,6 +99,7 @@ namespace WpfApp1
             else
             {
                 PLCImage.Source = IFalse;
+
             }
 
         }
@@ -127,7 +127,7 @@ namespace WpfApp1
         }
 
         /// <summary>
-        /// 预留主线 计划xxx信息读取
+        /// 预留主线 计划xxx信息读取,报警信息
         /// </summary>
         private void MainPlanLoad()
         {
