@@ -283,8 +283,8 @@ namespace WpfApp1
         /// <summary>
         /// 初始化步骤
         /// </summary>
-        /// <param name="count"></param>
-        /// <param name="list"></param>
+        /// <param name="count">总步骤数</param>
+        /// <param name="list">详情</param>
         private void SetStepData(int count, List<StationData> list)
         {
             #region who care
@@ -477,8 +477,8 @@ namespace WpfApp1
         /// <summary>
         /// 更改步骤状态
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="GWNo"></param>
+        /// <param name="type">步骤状态</param>
+        /// <param name="GWNo">工位号</param>
         private void ModifyStep(int type, int GWNo)
         {
             switch (GWNo)

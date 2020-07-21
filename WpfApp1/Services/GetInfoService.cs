@@ -9,6 +9,11 @@ namespace WpfApp1.Services
 using Entity;
     public class GetInfoService
     {
+        /// <summary>
+        /// 工位号DB位
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public string GetStaStr(int value)
         {
             string conn = null;
@@ -33,6 +38,11 @@ using Entity;
             return conn;
         }
 
+        /// <summary>
+        /// 型号DB位
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public string GetTypeStr(int value)
         {
             string conn = null;
@@ -72,6 +82,11 @@ using Entity;
             return conn;
         }
 
+        /// <summary>
+        /// 拧紧枪DB位
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public GDbStr GetGunStr(int value)
         {
             GDbStr str = new GDbStr();
@@ -131,6 +146,11 @@ using Entity;
             return str;
         }
 
+        /// <summary>
+        /// 条码DB位
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public BarCodeStr GetBarCodeStr(int value)
         {
             var tmp = value+1;
