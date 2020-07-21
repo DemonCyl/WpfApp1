@@ -1,19 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Panuon.UI.Silver;
-using Panuon.UI.Silver.Core;
 using System.Windows.Threading;
 using S7.Net;
 using WpfApp1.Entity;
@@ -30,7 +19,6 @@ namespace WpfApp1
     {
 
         private string _message = "服务器连接异常！";
-        private static double mark = 233.33;
         private GetInfoService service = new GetInfoService();
         private DispatcherTimer ShowTimer;
         private ConfigData config;
@@ -39,7 +27,6 @@ namespace WpfApp1
         private GDbStr GunStr;
         private int markN = 0;
         private List<GDbData> ReList = new List<GDbData>();
-        //private static BitmapImage IStation = new BitmapImage(new Uri("C:\\Users\\Administrator\\Desktop\\cs.png", UriKind.Absolute));  //"C:\\Users\\Administrator\\Desktop\\cs.png", UriKind.Absolute
         private static BitmapImage ILogo = new BitmapImage(new Uri("/Images/logo.png", UriKind.Relative));
         private static BitmapImage IFalse = new BitmapImage(new Uri("/Images/01.png", UriKind.Relative));
         private static BitmapImage ITrue = new BitmapImage(new Uri("/Images/02.png", UriKind.Relative));
