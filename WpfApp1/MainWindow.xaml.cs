@@ -18,7 +18,6 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
 
-        private string _message = "服务器连接异常！";
         private GetInfoService service = new GetInfoService();
         private DispatcherTimer ShowTimer;
         private ConfigData config;
@@ -142,8 +141,8 @@ namespace WpfApp1
             dispatcherTimer.Tick += (s, e) =>
             {
                 //读取PLC工序步骤状态
-                var stt = plc.Read(service.GetStaStr(config.StationNo));
-                var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo)); //service.GetStaStr(config.StationNo)));
+                //var stt = plc.Read(service.GetStaStr(config.StationNo));
+                var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo));
                 ModifyStep(sta, config.GWNo);
 
                 //型号获取
@@ -159,7 +158,7 @@ namespace WpfApp1
                     default: break;
                 }
 
-                //BarCode Get
+                #region BarCode Get
                 if (config.BarCount > 0)
                 {
                     int k = config.BarNo;  //adress get;
@@ -207,7 +206,7 @@ namespace WpfApp1
                         }
                     }
                 }
-
+                #endregion
 
                 #region 拧紧枪数据获取
                 ReList.Clear();
