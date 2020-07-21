@@ -146,6 +146,9 @@ namespace WpfApp1
             dispatcherTimer.Start();
         }
 
+        /// <summary>
+        /// PLC数据读取处理
+        /// </summary>
         private void DataReload()
         {
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
@@ -278,6 +281,9 @@ namespace WpfApp1
             this.TM.Text += " ";
         }
 
+        /// <summary>
+        /// 本地配置文件读取
+        /// </summary>
         private void LoadJsonData()
         {
             using (var sr = File.OpenText("C:\\config\\config.json"))
@@ -286,6 +292,12 @@ namespace WpfApp1
                 config = JsonConvert.DeserializeObject<ConfigData>(JsonStr);
             }
         }
+
+        /// <summary>
+        /// 初始化步骤
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="list"></param>
         private void SetStepData(int count, List<StationData> list)
         {
             #region who care
@@ -475,6 +487,11 @@ namespace WpfApp1
             #endregion
         }
 
+        /// <summary>
+        /// 更改步骤状态
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="GWNo"></param>
         private void ModifyStep(int type, int GWNo)
         {
             switch (GWNo)
@@ -729,6 +746,11 @@ namespace WpfApp1
 
         }
 
+        /// <summary>
+        /// 窗口关闭事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (MessageBoxX.Show("是否要关闭？", "确认", Application.Current.MainWindow, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
