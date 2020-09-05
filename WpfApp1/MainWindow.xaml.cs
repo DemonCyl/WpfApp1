@@ -54,14 +54,17 @@ namespace WpfApp1
                 case 20:
                     TM_Copy.Text = "CC特性：\r\n \r\n       9 + 1 Nm \r\n       25 + 3 Nm";
                     break;
-                case 04052:
+                case 40:
                     TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
+                    break;
+                case 04052:
+                    TM_Copy.Text = "CC特性：\r\n \r\n       8 + 2 Nm\r\n        ";
                     break;
                 case 04053:
                     TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
                     break;
                 case 04061:
-                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n       ";
+                    TM_Copy.Text = "CC特性：\r\n \r\n       2.4 ± 1Nm\r\n       ";
                     break;
                 case 04063:
                     TM_Copy.Text = "CC特性：\r\n \r\n        \r\n       ";
@@ -87,7 +90,6 @@ namespace WpfApp1
                 PLCImage.Source = IFalse;
 
             }
-
         }
 
         /// <summary>
