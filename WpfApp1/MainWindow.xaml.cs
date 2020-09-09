@@ -213,7 +213,7 @@ namespace WpfApp1
                     #endregion
 
                     #region New BarCodeGet
-                    int startStr = service.GetNewBarCodeStr(config.GWNo);
+                    int startAddr = service.GetNewBarCodeStr(config.GWNo);
                     Barcode1.Text = "";
                     Barcode2.Text = "";
                     Barcode3.Text = "";
@@ -223,10 +223,10 @@ namespace WpfApp1
                     {
                         if (i != 1)
                         {
-                            startStr += 72;
+                            startAddr += 72;
                         }
 
-                        var temp = (string)plc.Read(DataType.DataBlock, 2000, startStr, VarType.String, config.BarLengh);
+                        var temp = (string)plc.Read(DataType.DataBlock, 2000, startAddr, VarType.String, config.BarLengh);
                         temp = temp.Trim();
                         if (!temp.IsNullOrEmpty())
                         {
