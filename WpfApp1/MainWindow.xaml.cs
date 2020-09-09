@@ -67,7 +67,7 @@ namespace WpfApp1
                     TM_Copy.Text = "CC特性：\r\n \r\n       2.4 ± 1Nm\r\n       ";
                     break;
                 case 04063:
-                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n       ";
+                    TM_Copy.Text = "CC特性：\r\n \r\n       20 + 5Nm \r\n       ";
                     break;
             }
 
@@ -147,7 +147,8 @@ namespace WpfApp1
                 var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo));
                 ModifyStep(sta, config.GWNo);
 
-                //型号获取
+                //型号获取  ushort 0405,int 0406
+
                 var type = (ushort)plc.Read(service.GetTypeStr(config.ProductNo));
                 switch (type)
                 {
@@ -534,7 +535,7 @@ namespace WpfApp1
                     switch (type)
                     {
                         case 100:
-                            StepImage1.Source = IFalse;
+                            StepImage1.Source = ITrue;
                             StepImage2.Source = IFalse;
                             StepImage3.Source = IFalse;
                             StepImage4.Source = IFalse;
@@ -543,33 +544,38 @@ namespace WpfApp1
                             StepImage7.Source = IFalse;
                             StepImage8.Source = IFalse;
                             StepImage9.Source = IFalse;
+                            StepImage10.Source = IFalse;
+                            StepImage11.Source = IFalse;
                             break;
-                        case 200:
-                            StepImage1.Source = ITrue;
-                            break;
-                        case 300:
+                        case 110:
                             StepImage2.Source = ITrue;
                             break;
-                        case 500:
+                        case 150:
                             StepImage3.Source = ITrue;
                             break;
-                        case 700:
+                        case 200:
                             StepImage4.Source = ITrue;
                             break;
-                        case 900:
+                        case 400:
                             StepImage5.Source = ITrue;
                             break;
-                        case 1100:
+                        case 700:
                             StepImage6.Source = ITrue;
                             break;
-                        case 1200:
+                        case 900:
                             StepImage7.Source = ITrue;
                             break;
-                        case 1300:
+                        case 1100:
                             StepImage8.Source = ITrue;
                             break;
-                        case 1400:
+                        case 1300:
                             StepImage9.Source = ITrue;
+                            break;
+                        case 1400:
+                            StepImage10.Source = ITrue;
+                            break;
+                        case 1500:
+                            StepImage11.Source = ITrue;
                             break;
                     }
                     break;
@@ -577,7 +583,7 @@ namespace WpfApp1
                     switch (type)
                     {
                         case 100:
-                            StepImage1.Source = IFalse;
+                            StepImage1.Source = ITrue;
                             StepImage2.Source = IFalse;
                             StepImage3.Source = IFalse;
                             StepImage4.Source = IFalse;
@@ -590,38 +596,35 @@ namespace WpfApp1
                             StepImage11.Source = IFalse;
                             StepImage12.Source = IFalse;
                             break;
-                        case 200:
-                            StepImage1.Source = ITrue;
-                            break;
-                        case 250:
+                        case 110:
                             StepImage2.Source = ITrue;
                             break;
-                        case 260:
+                        case 150:
                             StepImage3.Source = ITrue;
                             break;
-                        case 300:
+                        case 200:
                             StepImage4.Source = ITrue;
                             break;
-                        case 400:
+                        case 300:
                             StepImage5.Source = ITrue;
                             break;
-                        case 500:
+                        case 400:
                             StepImage6.Source = ITrue;
                             break;
-                        case 600:
+                        case 500:
                             StepImage7.Source = ITrue;
                             break;
-                        case 700:
+                        case 600:
                             StepImage8.Source = ITrue;
                             break;
-                        case 750:
+                        case 700:
                             StepImage9.Source = ITrue;
                             break;
                         case 800:
                             StepImage10.Source = ITrue;
                             break;
                         case 900:
-                            StepImage10.Source = ITrue;
+                            StepImage11.Source = ITrue;
                             break;
                         case 1000:
                             StepImage12.Source = ITrue;
@@ -632,54 +635,7 @@ namespace WpfApp1
                     switch (type)
                     {
                         case 100:
-                            StepImage1.Source = IFalse;
-                            StepImage2.Source = IFalse;
-                            StepImage3.Source = IFalse;
-                            StepImage4.Source = IFalse;
-                            StepImage5.Source = IFalse;
-                            StepImage6.Source = IFalse;
-                            StepImage7.Source = IFalse;
-                            StepImage8.Source = IFalse;
-                            StepImage9.Source = IFalse;
-                            StepImage10.Source = IFalse;
-                            break;
-                        case 200:
                             StepImage1.Source = ITrue;
-                            break;
-                        case 300:
-                            StepImage2.Source = ITrue;
-                            break;
-                        case 310:
-                            StepImage3.Source = ITrue;
-                            break;
-                        case 350:
-                            StepImage4.Source = ITrue;
-                            break;
-                        case 400:
-                            StepImage5.Source = ITrue;
-                            break;
-                        case 500:
-                            StepImage6.Source = ITrue;
-                            break;
-                        case 550:
-                            StepImage7.Source = ITrue;
-                            break;
-                        case 600:
-                            StepImage8.Source = ITrue;
-                            break;
-                        case 800:
-                            StepImage9.Source = ITrue;
-                            break;
-                        case 900:
-                            StepImage10.Source = ITrue;
-                            break;
-                    }
-                    break;
-                case 04063:
-                    switch (type)
-                    {
-                        case 100:
-                            StepImage1.Source = IFalse;
                             StepImage2.Source = IFalse;
                             StepImage3.Source = IFalse;
                             StepImage4.Source = IFalse;
@@ -692,37 +648,86 @@ namespace WpfApp1
                             StepImage11.Source = IFalse;
                             StepImage12.Source = IFalse;
                             break;
-                        case 120:
-                            StepImage1.Source = ITrue;
-                            break;
-                        case 150:
+                        case 110:
                             StepImage2.Source = ITrue;
                             break;
-                        case 400:
+                        case 200:
                             StepImage3.Source = ITrue;
                             break;
-                        case 600:
+                        case 300:
                             StepImage4.Source = ITrue;
                             break;
-                        case 800:
+                        case 600:
                             StepImage5.Source = ITrue;
                             break;
-                        case 960:
+                        case 800:
                             StepImage6.Source = ITrue;
                             break;
-                        case 1000:
+                        case 900:
                             StepImage7.Source = ITrue;
                             break;
-                        case 1600:
+                        case 1400:
                             StepImage8.Source = ITrue;
                             break;
-                        case 1700:
+                        case 1600:
                             StepImage9.Source = ITrue;
                             break;
                         case 1800:
                             StepImage10.Source = ITrue;
                             break;
                         case 1900:
+                            StepImage11.Source = ITrue;
+                            break;
+                        case 2000:
+                            StepImage12.Source = ITrue;
+                            break;
+                    }
+                    break;
+                case 04063:
+                    switch (type)
+                    {
+                        case 106:
+                            StepImage1.Source = ITrue;
+                            StepImage2.Source = IFalse;
+                            StepImage3.Source = IFalse;
+                            StepImage4.Source = IFalse;
+                            StepImage5.Source = IFalse;
+                            StepImage6.Source = IFalse;
+                            StepImage7.Source = IFalse;
+                            StepImage8.Source = IFalse;
+                            StepImage9.Source = IFalse;
+                            StepImage10.Source = IFalse;
+                            StepImage11.Source = IFalse;
+                            StepImage12.Source = IFalse;
+                            break;
+                        case 110:
+                            StepImage2.Source = ITrue;
+                            break;
+                        case 150:
+                            StepImage3.Source = ITrue;
+                            break;
+                        case 500:
+                            StepImage4.Source = ITrue;
+                            break;
+                        case 700:
+                            StepImage5.Source = ITrue;
+                            break;
+                        case 900:
+                            StepImage6.Source = ITrue;
+                            break;
+                        case 1000:
+                            StepImage7.Source = ITrue;
+                            break;
+                        case 1300:
+                            StepImage8.Source = ITrue;
+                            break;
+                        case 1400:
+                            StepImage9.Source = ITrue;
+                            break;
+                        case 1500:
+                            StepImage10.Source = ITrue;
+                            break;
+                        case 1600:
                             StepImage11.Source = ITrue;
                             break;
                         case 2100:
