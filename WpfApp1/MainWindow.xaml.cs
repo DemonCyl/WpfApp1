@@ -162,93 +162,98 @@ namespace WpfApp1
                         default: break;
                     }
 
-                    #region OLD BarCode Get 
-                    //if (config.BarCount > 0)
-                    //{
-                    //    int k = config.BarNo;  //adress get;
-                    //    Barcode1.Text = "";
-                    //    Barcode2.Text = "";
-                    //    Barcode3.Text = "";
-                    //    Barcode4.Text = "";
-                    //    BarYz.Text = "";
-                    //    for (int i = 1; i <= config.BarCount; i++)
-                    //    {
-                    //        var i1 = i + k - 1;
-                    //        if (i1 == k)
-                    //        {
-                    //            codeStr = service.GetBarCodeStr(k);
-                    //            var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
-                    //            temp = temp.Trim();
-                    //            var BarResult = (bool)plc.Read(codeStr.ResultStr);
-                    //            if (!temp.IsNullOrEmpty())
-                    //            {
-                    //                switch (i)
-                    //                {
-                    //                    case 1:
-                    //                        Barcode1.Text = temp;
-                    //                        break;
-                    //                    case 2:
-                    //                        Barcode2.Text = temp;
-                    //                        break;
-                    //                    case 3:
-                    //                        Barcode3.Text = temp;
-                    //                        break;
-                    //                    case 4:
-                    //                        Barcode4.Text = temp;
-                    //                        break;
-                    //                }
-                    //                if (BarResult)
-                    //                {
-                    //                    BarYz.Text = "比对成功";
-                    //                }
-                    //                else
-                    //                {
-                    //                    BarYz.Text = "比对失败";
-                    //                }
-                    //                k += 1;
-                    //            }
-                    //        }
-                    //    }
-                    //}
-                    #endregion
-
-                    #region New BarCodeGet
-                    int startAddr = service.GetNewBarCodeStr(config.GWNo);
-                    Barcode1.Text = "";
-                    Barcode2.Text = "";
-                    Barcode3.Text = "";
-                    Barcode4.Text = "";
-                    BarYz.Text = "";
-                    for (int i = 1; i <= 4; i++)
+                    if (config.GWNo == 20 || config.GWNo == 40) //旧工位适用
                     {
-                        if (i != 1)
+                        #region OLD BarCode Get 
+                        if (config.BarCount > 0)
                         {
-                            startAddr += 72;
-                        }
-
-                        var temp = (string)plc.Read(DataType.DataBlock, 2000, startAddr, VarType.String, config.BarLengh);
-                        temp = temp.Trim();
-                        if (!temp.IsNullOrEmpty())
-                        {
-                            switch (i)
+                            int k = config.BarNo;  //address get;
+                            Barcode1.Text = "";
+                            Barcode2.Text = "";
+                            Barcode3.Text = "";
+                            Barcode4.Text = "";
+                            BarYz.Text = "";
+                            for (int i = 1; i <= config.BarCount; i++)
                             {
-                                case 1:
-                                    Barcode1.Text = temp;
-                                    break;
-                                case 2:
-                                    Barcode2.Text = temp;
-                                    break;
-                                case 3:
-                                    Barcode3.Text = temp;
-                                    break;
-                                case 4:
-                                    Barcode4.Text = temp;
-                                    break;
+                                var i1 = i + k - 1;
+                                if (i1 == k)
+                                {
+                                    codeStr = service.GetBarCodeStr(k);
+                                    var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
+                                    temp = temp.Trim();
+                                    var BarResult = (bool)plc.Read(codeStr.ResultStr);
+                                    if (!temp.IsNullOrEmpty())
+                                    {
+                                        switch (i)
+                                        {
+                                            case 1:
+                                                Barcode1.Text = temp;
+                                                break;
+                                            case 2:
+                                                Barcode2.Text = temp;
+                                                break;
+                                            case 3:
+                                                Barcode3.Text = temp;
+                                                break;
+                                            case 4:
+                                                Barcode4.Text = temp;
+                                                break;
+                                        }
+                                        if (BarResult)
+                                        {
+                                            BarYz.Text = "比对成功";
+                                        }
+                                        else
+                                        {
+                                            BarYz.Text = "比对失败";
+                                        }
+                                        k += 1;
+                                    }
+                                }
                             }
-                            BarYz.Text = "比对成功";
                         }
+                        #endregion
                     }
-                    #endregion
+                    else //新工位（405,406）
+                    {
+                        #region New BarCodeGet
+                        int startAddr = service.GetNewBarCodeStr(config.GWNo);
+                        Barcode1.Text = "";
+                        Barcode2.Text = "";
+                        Barcode3.Text = "";
+                        Barcode4.Text = "";
+                        BarYz.Text = "";
+                        for (int i = 1; i <= 4; i++)
+                        {
+                            if (i != 1)
+                            {
+                                startAddr += 72;
+                            }
+
+                            var temp = (string)plc.Read(DataType.DataBlock, 2000, startAddr, VarType.String, config.BarLengh);
+                            temp = temp.Trim();
+                            if (!temp.IsNullOrEmpty())
+                            {
+                                switch (i)
+                                {
+                                    case 1:
+                                        Barcode1.Text = temp;
+                                        break;
+                                    case 2:
+                                        Barcode2.Text = temp;
+                                        break;
+                                    case 3:
+                                        Barcode3.Text = temp;
+                                        break;
+                                    case 4:
+                                        Barcode4.Text = temp;
+                                        break;
+                                }
+                                BarYz.Text = "比对成功";
+                            }
+                        }
+                        #endregion
+                    }
 
                     #region 拧紧枪数据获取
                     ReList.Clear();
