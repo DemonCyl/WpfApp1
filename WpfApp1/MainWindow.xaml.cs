@@ -142,115 +142,155 @@ namespace WpfApp1
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (s, e) =>
             {
-                //读取PLC工序步骤状态
-                //var stt = plc.Read(service.GetStaStr(config.StationNo));
-                var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo));
-                ModifyStep(sta, config.GWNo);
-
-                //型号获取  ushort 0405,int 0406
-
-                var type = (ushort)plc.Read(service.GetTypeStr(config.ProductNo));
-                switch (type)
+                try
                 {
-                    case 1:
-                        XingHao.Text = "正驾";
-                        break;
-                    case 2:
-                        XingHao.Text = "副驾";
-                        break;
-                    default: break;
-                }
+                    //读取PLC工序步骤状态
+                    //var stt = plc.Read(service.GetStaStr(config.StationNo));
+                    var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo));
+                    ModifyStep(sta, config.GWNo);
 
-                #region BarCode Get
-                if (config.BarCount > 0)
-                {
-                    int k = config.BarNo;  //adress get;
+                    //型号获取  ushort 0405,int 0406
+                    var type = (ushort)plc.Read(service.GetTypeStr(config.ProductNo));
+                    switch (type)
+                    {
+                        case 1:
+                            XingHao.Text = "正驾";
+                            break;
+                        case 2:
+                            XingHao.Text = "副驾";
+                            break;
+                        default: break;
+                    }
+
+                    #region OLD BarCode Get 
+                    //if (config.BarCount > 0)
+                    //{
+                    //    int k = config.BarNo;  //adress get;
+                    //    Barcode1.Text = "";
+                    //    Barcode2.Text = "";
+                    //    Barcode3.Text = "";
+                    //    Barcode4.Text = "";
+                    //    BarYz.Text = "";
+                    //    for (int i = 1; i <= config.BarCount; i++)
+                    //    {
+                    //        var i1 = i + k - 1;
+                    //        if (i1 == k)
+                    //        {
+                    //            codeStr = service.GetBarCodeStr(k);
+                    //            var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
+                    //            temp = temp.Trim();
+                    //            var BarResult = (bool)plc.Read(codeStr.ResultStr);
+                    //            if (!temp.IsNullOrEmpty())
+                    //            {
+                    //                switch (i)
+                    //                {
+                    //                    case 1:
+                    //                        Barcode1.Text = temp;
+                    //                        break;
+                    //                    case 2:
+                    //                        Barcode2.Text = temp;
+                    //                        break;
+                    //                    case 3:
+                    //                        Barcode3.Text = temp;
+                    //                        break;
+                    //                    case 4:
+                    //                        Barcode4.Text = temp;
+                    //                        break;
+                    //                }
+                    //                if (BarResult)
+                    //                {
+                    //                    BarYz.Text = "比对成功";
+                    //                }
+                    //                else
+                    //                {
+                    //                    BarYz.Text = "比对失败";
+                    //                }
+                    //                k += 1;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    #endregion
+
+                    #region New BarCodeGet
+                    int startStr = service.GetNewBarCodeStr(config.GWNo);
                     Barcode1.Text = "";
                     Barcode2.Text = "";
                     Barcode3.Text = "";
                     Barcode4.Text = "";
                     BarYz.Text = "";
-                    for (int i = 1; i <= config.BarCount; i++)
+                    for (int i = 1; i <= 4; i++)
                     {
-                        var i1 = i + k - 1;
-                        if (i1 == k)
+                        if (i != 1)
                         {
-                            codeStr = service.GetBarCodeStr(k);
-                            var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
-                            temp = temp.Trim();
-                            var BarResult = (bool)plc.Read(codeStr.ResultStr);
-                            if (!temp.IsNullOrEmpty())
+                            startStr += 72;
+                        }
+
+                        var temp = (string)plc.Read(DataType.DataBlock, 2000, startStr, VarType.String, config.BarLengh);
+                        temp = temp.Trim();
+                        if (!temp.IsNullOrEmpty())
+                        {
+                            switch (i)
                             {
-                                switch (i)
+                                case 1:
+                                    Barcode1.Text = temp;
+                                    break;
+                                case 2:
+                                    Barcode2.Text = temp;
+                                    break;
+                                case 3:
+                                    Barcode3.Text = temp;
+                                    break;
+                                case 4:
+                                    Barcode4.Text = temp;
+                                    break;
+                            }
+                            BarYz.Text = "比对成功";
+                        }
+                    }
+                    #endregion
+
+                    #region 拧紧枪数据获取
+                    ReList.Clear();
+                    if (config.GunCount > 0)
+                    {
+                        for (int i = 1; i <= config.GunCount; i++)
+                        {
+                            var i1 = i + config.GunNo - 1;
+                            GunStr = service.GetGunStr(i1);
+                            var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
+                            torque1 = double.Parse(torque1.ToString("F2"));
+                            var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
+                            angle1 = double.Parse(angle1.ToString("F2"));
+                            var result1 = (bool)plc.Read(GunStr.ResultStr);
+                            string rest;
+                            if (torque1 != 0)
+                            {
+                                if (i == 1)
                                 {
-                                    case 1:
-                                        Barcode1.Text = temp;
-                                        break;
-                                    case 2:
-                                        Barcode2.Text = temp;
-                                        break;
-                                    case 3:
-                                        Barcode3.Text = temp;
-                                        break;
-                                    case 4:
-                                        Barcode4.Text = temp;
-                                        break;
+                                    ReList.Clear();
+                                    markN = 0;
                                 }
-                                if (BarResult)
+                                if (result1)
                                 {
-                                    BarYz.Text = "比对成功";
+                                    rest = "OK";
                                 }
                                 else
                                 {
-                                    BarYz.Text = "比对失败";
+                                    rest = "NG";
                                 }
-                                k += 1;
+                                markN += 1;
+                                ReList.Add(new GDbData(markN, torque1, angle1, rest));
+                                ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
+                                DataList.ItemsSource = null;
+                                DataList.ItemsSource = ReList;
+                                DataList.Items.Refresh();
                             }
                         }
                     }
+                    #endregion
                 }
-                #endregion
-
-                #region 拧紧枪数据获取
-                ReList.Clear();
-                if (config.GunCount > 0)
-                {
-                    for (int i = 1; i <= config.GunCount; i++)
-                    {
-                        var i1 = i + config.GunNo - 1;
-                        GunStr = service.GetGunStr(i1);
-                        var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
-                        torque1 = double.Parse(torque1.ToString("F2"));
-                        var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
-                        angle1 = double.Parse(angle1.ToString("F2"));
-                        var result1 = (bool)plc.Read(GunStr.ResultStr);
-                        string rest;
-                        if (torque1 != 0)
-                        {
-                            if (i == 1)
-                            {
-                                ReList.Clear();
-                                markN = 0;
-                            }
-                            if (result1)
-                            {
-                                rest = "OK";
-                            }
-                            else
-                            {
-                                rest = "NG";
-                            }
-                            markN += 1;
-                            ReList.Add(new GDbData(markN, torque1, angle1, rest));
-                            ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
-                            DataList.ItemsSource = null;
-                            DataList.ItemsSource = ReList;
-                            DataList.Items.Refresh();
-                        }
-                    }
-                }
-                #endregion
-
+                catch { }
 
             };
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(2);
@@ -275,10 +315,16 @@ namespace WpfApp1
         /// </summary>
         private void LoadJsonData()
         {
-            using (var sr = File.OpenText("C:\\config\\config.json"))
+            try
             {
-                string JsonStr = sr.ReadToEnd();
-                config = JsonConvert.DeserializeObject<ConfigData>(JsonStr);
+                using (var sr = File.OpenText("C:\\config\\config.json"))
+                {
+                    string JsonStr = sr.ReadToEnd();
+                    config = JsonConvert.DeserializeObject<ConfigData>(JsonStr);
+                }
+            }
+            catch
+            {
             }
         }
 

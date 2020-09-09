@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WpfApp1.Services
 {
-using Entity;
+    using Entity;
     public class GetInfoService
     {
         /// <summary>
@@ -90,7 +90,7 @@ using Entity;
         public GDbStr GetGunStr(int value)
         {
             GDbStr str = new GDbStr();
-            switch(value)
+            switch (value)
             {
                 case 1:
                     str.TorqueStr = "DB2000.DBD10.0";
@@ -153,11 +153,32 @@ using Entity;
         /// <returns></returns>
         public BarCodeStr GetBarCodeStr(int value)
         {
-            var tmp = value+1;
+            var tmp = value + 1;
             BarCodeStr str = new BarCodeStr();
-            str.BarStr = value*100+10;
-            str.ResultStr = "DB2000.DBX"+tmp+"08.0";
+            str.BarStr = value * 100 + 10;
+            str.ResultStr = "DB2000.DBX" + tmp + "08.0";
             return str;
+        }
+
+        public int GetNewBarCodeStr(int GWNo)
+        {
+            int firstStr = 0;
+            switch (GWNo)
+            {
+                case 04052:
+                    firstStr = 4866;
+                    break;
+                case 04053:
+                    firstStr = 5174;
+                    break;
+                case 04061:
+                    firstStr = 4290;
+                    break;
+                case 04063:
+                    firstStr = 5154;
+                    break;
+            }
+            return firstStr;
         }
     }
 }
