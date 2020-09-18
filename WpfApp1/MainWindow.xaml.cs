@@ -9,6 +9,7 @@ using WpfApp1.Entity;
 using System.IO;
 using Newtonsoft.Json;
 using WpfApp1.Services;
+using log4net;
 
 namespace WpfApp1
 {
@@ -29,6 +30,7 @@ namespace WpfApp1
         private static BitmapImage ILogo = new BitmapImage(new Uri("/Images/logo.png", UriKind.Relative));
         private static BitmapImage IFalse = new BitmapImage(new Uri("/Images/01.png", UriKind.Relative));
         private static BitmapImage ITrue = new BitmapImage(new Uri("/Images/02.png", UriKind.Relative));
+        private ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public MainWindow()
         {
@@ -43,52 +45,61 @@ namespace WpfApp1
             this.Height = rc.Height;
             #endregion
 
-
-            //读取本地配置JSON文件
-            LoadJsonData();
-            Init();
-            //MainPlanLoad();
-            plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
-            switch (config.GWNo)
+            try
             {
-                case 20:
-                    TM_Copy.Text = "CC特性：\r\n \r\n       9 + 1 Nm \r\n       25 + 3 Nm";
-                    break;
-                case 40:
-                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
-                    break;
-                case 04052:
-                    TM_Copy.Text = "CC特性：\r\n \r\n       8 + 2 Nm\r\n        ";
-                    break;
-                case 04053:
-                    TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
-                    break;
-                case 04061:
-                    TM_Copy.Text = "CC特性：\r\n \r\n       2.4 ± 1Nm\r\n       ";
-                    break;
-                case 04063:
-                    TM_Copy.Text = "CC特性：\r\n \r\n       20 + 5Nm \r\n       ";
-                    break;
-            }
-
-            if (plc.IsAvailable)
-            {
-
-                var result = plc.Open();
-                if (!plc.IsConnected)
+                //读取本地配置JSON文件
+                LoadJsonData();
+                Init();
+                //MainPlanLoad();
+                plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
+                switch (config.GWNo)
                 {
-                    PLCImage.Source = IFalse;
+                    case 20:
+                        TM_Copy.Text = "CC特性：\r\n \r\n       9 + 1 Nm \r\n       25 + 3 Nm";
+                        break;
+                    case 40:
+                        TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
+                        break;
+                    case 04052:
+                        TM_Copy.Text = "CC特性：\r\n \r\n       8 + 2 Nm\r\n        ";
+                        break;
+                    case 04053:
+                        TM_Copy.Text = "CC特性：\r\n \r\n        \r\n        ";
+                        break;
+                    case 04061:
+                        TM_Copy.Text = "CC特性：\r\n \r\n       2.4 ± 1Nm\r\n       ";
+                        break;
+                    case 04063:
+                        TM_Copy.Text = "CC特性：\r\n \r\n       20 + 5Nm \r\n       ";
+                        break;
+                }
+
+                if (plc.IsAvailable)
+                {
+
+                    var result = plc.Open();
+                    if (!plc.IsConnected)
+                    {
+                        PLCImage.Source = IFalse;
+                        log.Info("PLC Not Connected!");
+                    }
+                    else
+                    {
+                        PLCImage.Source = ITrue;
+                        log.Info("PLC Connected!");
+
+                        DataReload();
+                    }
                 }
                 else
                 {
-                    PLCImage.Source = ITrue;
-                    DataReload();
+                    PLCImage.Source = IFalse;
+                    log.Info("PLC Not Connected!");
                 }
             }
-            else
+            catch (Exception e)
             {
-                PLCImage.Source = IFalse;
-
+                log.Error(e.Message);
             }
         }
 
@@ -295,7 +306,11 @@ namespace WpfApp1
                     }
                     #endregion
                 }
-                catch { }
+                catch (Exception exc)
+                {
+                    log.Error("------PLC访问出错------");
+                    log.Error(exc.Message);
+                }
 
             };
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(2);
@@ -328,8 +343,9 @@ namespace WpfApp1
                     config = JsonConvert.DeserializeObject<ConfigData>(JsonStr);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                log.Error(e.Message);
             }
         }
 
@@ -803,6 +819,7 @@ namespace WpfApp1
                 if (plc.IsConnected)
                 {
                     plc.Close();
+                    log.Info("PLC Disconnected!");
                 }
             }
             else
