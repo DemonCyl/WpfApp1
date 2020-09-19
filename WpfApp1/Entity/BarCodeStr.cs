@@ -8,7 +8,7 @@ namespace WpfApp1.Entity
 {
     public class BarCodeStr
     {
-        public int BarStr { get; set; }
+        public string BarStr { get; set; }
 
         public string ResultStr { get; set; }
 

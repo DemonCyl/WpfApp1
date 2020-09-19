@@ -41,6 +41,6 @@ namespace WpfApp1.Entity
         public int BarCount { get; set; }
         public string ImageUri { get; set; }
 
-        public int BarLengh { get; set; }
+        public ushort BarLengh { get; set; }
     }
 }

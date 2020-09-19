@@ -10,6 +10,8 @@ using System.IO;
 using Newtonsoft.Json;
 using WpfApp1.Services;
 using log4net;
+using HslCommunication;
+using HslCommunication.Profinet.Siemens;
 
 namespace WpfApp1
 {
@@ -23,7 +25,9 @@ namespace WpfApp1
         private DispatcherTimer ShowTimer;
         private ConfigData config;
         private BarCodeStr codeStr;
-        private Plc plc;
+        //private Plc plc;
+        private SiemensS7Net splc;
+        private OperateResult connect;
         private GDbStr GunStr;
         private int markN = 0;
         private List<GDbData> ReList = new List<GDbData>();
@@ -51,7 +55,11 @@ namespace WpfApp1
                 LoadJsonData();
                 Init();
                 //MainPlanLoad();
-                plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
+                //plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
+                splc = new SiemensS7Net(SiemensPLCS.S1200, config.IpAdress)
+                {
+                    ConnectTimeOut = 5000
+                };
                 switch (config.GWNo)
                 {
                     case 20:
@@ -74,28 +82,42 @@ namespace WpfApp1
                         break;
                 }
 
-                if (plc.IsAvailable)
+                connect = splc.ConnectServer();
+                if (connect.IsSuccess)
                 {
+                    PLCImage.Source = ITrue;
+                    log.Info("PLC Connected!");
 
-                    var result = plc.Open();
-                    if (!plc.IsConnected)
-                    {
-                        PLCImage.Source = IFalse;
-                        log.Info("PLC Not Connected!");
-                    }
-                    else
-                    {
-                        PLCImage.Source = ITrue;
-                        log.Info("PLC Connected!");
-
-                        DataReload();
-                    }
+                    DataReload();
                 }
                 else
                 {
                     PLCImage.Source = IFalse;
                     log.Info("PLC Not Connected!");
                 }
+
+                //if (plc.IsAvailable)
+                //{
+
+                //    var result = plc.Open();
+                //    if (!plc.IsConnected)
+                //    {
+                //        PLCImage.Source = IFalse;
+                //        log.Info("PLC Not Connected!");
+                //    }
+                //    else
+                //    {
+                //        PLCImage.Source = ITrue;
+                //        log.Info("PLC Connected!");
+
+                //        DataReload();
+                //    }
+                //}
+                //else
+                //{
+                //    PLCImage.Source = IFalse;
+                //    log.Info("PLC Not Connected!");
+                //}
             }
             catch (Exception e)
             {
@@ -156,21 +178,47 @@ namespace WpfApp1
                 try
                 {
                     //读取PLC工序步骤状态
-                    //var stt = plc.Read(service.GetStaStr(config.StationNo));
-                    var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo));
-                    ModifyStep(sta, config.GWNo);
+                    //var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo));
+                    //ModifyStep(sta, config.GWNo);
+                    var sta = splc.ReadUInt16(service.GetStaStr(config.StationNo));
+                    if (sta.IsSuccess)
+                    {
+                        ModifyStep(sta.Content, config.GWNo);
+                    }
+                    else
+                    {
+                        log.Error("工序步骤状态读取失败");
+                    }
 
                     //型号获取  ushort 0405,int 0406
-                    var type = (ushort)plc.Read(service.GetTypeStr(config.ProductNo));
-                    switch (type)
+                    //var type = (ushort)plc.Read(service.GetTypeStr(config.ProductNo));
+                    //switch (type)
+                    //{
+                    //    case 1:
+                    //        XingHao.Text = "正驾";
+                    //        break;
+                    //    case 2:
+                    //        XingHao.Text = "副驾";
+                    //        break;
+                    //    default: break;
+                    //}
+                    var type = splc.ReadUInt16(service.GetTypeStr(config.ProductNo));
+                    if (type.IsSuccess)
                     {
-                        case 1:
-                            XingHao.Text = "正驾";
-                            break;
-                        case 2:
-                            XingHao.Text = "副驾";
-                            break;
-                        default: break;
+                        switch (type.Content)
+                        {
+                            case 1:
+                                XingHao.Text = "正驾";
+                                break;
+                            case 2:
+                                XingHao.Text = "副驾";
+                                break;
+                            default: break;
+                        }
+                    }
+                    else
+                    {
+                        log.Error("型号读取失败");
                     }
 
                     if (config.GWNo == 20 || config.GWNo == 40) //旧工位适用
@@ -190,9 +238,23 @@ namespace WpfApp1
                                 if (i1 == k)
                                 {
                                     codeStr = service.GetBarCodeStr(k);
-                                    var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
-                                    temp = temp.Trim();
-                                    var BarResult = (bool)plc.Read(codeStr.ResultStr);
+                                    //var temp = (string)plc.Read(DataType.DataBlock, 2000, codeStr.BarStr, VarType.String, 40);
+                                    //temp = temp.Trim();
+                                    //var BarResult = (bool)plc.Read(codeStr.ResultStr);
+
+                                    string temp = null;
+                                    bool BarResult = false;
+                                    var tempS = splc.ReadString(codeStr.BarStr, 40);
+                                    var barS = splc.ReadBool(codeStr.ResultStr);
+                                    if (tempS.IsSuccess)
+                                    {
+                                        temp = tempS.Content.Trim();
+                                    }
+                                    if (barS.IsSuccess)
+                                    {
+                                        BarResult = barS.Content;
+                                    }
+
                                     if (!temp.IsNullOrEmpty())
                                     {
                                         switch (i)
@@ -240,9 +302,17 @@ namespace WpfApp1
                             {
                                 startAddr += 72;
                             }
+                            string tStr = "DB2000." + startAddr;
 
-                            var temp = (string)plc.Read(DataType.DataBlock, 2000, startAddr, VarType.String, config.BarLengh);
-                            temp = temp.Trim();
+                            //var temp = (string)plc.Read(DataType.DataBlock, 2000, startAddr, VarType.String, config.BarLengh);
+                            //temp = temp.Trim();
+                            string temp = null;
+                            var tempS = splc.ReadString(tStr, config.BarLengh);
+                            if (tempS.IsSuccess)
+                            {
+                                temp = tempS.Content.Trim();
+                            }
+
                             if (!temp.IsNullOrEmpty())
                             {
                                 switch (i)
@@ -274,11 +344,30 @@ namespace WpfApp1
                         {
                             var i1 = i + config.GunNo - 1;
                             GunStr = service.GetGunStr(i1);
-                            var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
-                            torque1 = double.Parse(torque1.ToString("F2"));
-                            var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
-                            angle1 = double.Parse(angle1.ToString("F2"));
-                            var result1 = (bool)plc.Read(GunStr.ResultStr);
+                            //var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
+                            //torque1 = double.Parse(torque1.ToString("F2"));
+                            //var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
+                            //angle1 = double.Parse(angle1.ToString("F2"));
+                            //var result1 = (bool)plc.Read(GunStr.ResultStr);
+                            double torque1 = 0;
+                            double angle1 = 0;
+                            bool result1 = false;
+                            var t = splc.ReadDouble(GunStr.TorqueStr);
+                            var a = splc.ReadDouble(GunStr.AngleStr);
+                            var r = splc.ReadBool(GunStr.ResultStr);
+                            if (t.IsSuccess)
+                            {
+                                torque1 = double.Parse(t.Content.ToString("F2"));
+                            }
+                            if (a.IsSuccess)
+                            {
+                                angle1 = double.Parse(a.Content.ToString("F2"));
+                            }
+                            if (r.IsSuccess)
+                            {
+                                result1 = r.Content;
+                            }
+
                             string rest;
                             if (torque1 != 0)
                             {
@@ -310,6 +399,7 @@ namespace WpfApp1
                 {
                     log.Error("------PLC访问出错------");
                     log.Error(exc.Message);
+                    dispatcherTimer.Stop();
                 }
 
             };
@@ -816,10 +906,14 @@ namespace WpfApp1
             if (MessageBoxX.Show("是否要关闭？", "确认", Application.Current.MainWindow, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 e.Cancel = false;
-                if (plc.IsConnected)
+                //if (plc.IsConnected)
+                //{
+                //    plc.Close();
+                //    log.Info("PLC Disconnected!");
+                //}
+                if (connect.IsSuccess)
                 {
-                    plc.Close();
-                    log.Info("PLC Disconnected!");
+                    splc.ConnectClose();
                 }
             }
             else
