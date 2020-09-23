@@ -187,7 +187,7 @@ namespace WpfApp1
                     }
                     else
                     {
-                        log.Error("工序步骤状态读取失败");
+                        throw new Exception("工序步骤状态读取失败");
                     }
 
                     //型号获取  ushort 0405,int 0406
@@ -218,7 +218,7 @@ namespace WpfApp1
                     }
                     else
                     {
-                        log.Error("型号读取失败");
+                        throw new Exception("型号读取失败");
                     }
 
                     if (config.GWNo == 20 || config.GWNo == 40) //旧工位适用
@@ -250,9 +250,18 @@ namespace WpfApp1
                                     {
                                         temp = tempS.Content.Trim();
                                     }
+                                    else
+                                    {
+                                        throw new Exception("条码读取失败！");
+                                    }
+
                                     if (barS.IsSuccess)
                                     {
                                         BarResult = barS.Content;
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("条码比对结果读取失败！");
                                     }
 
                                     if (!temp.IsNullOrEmpty())
@@ -312,6 +321,10 @@ namespace WpfApp1
                             {
                                 temp = tempS.Content.Trim();
                             }
+                            else
+                            {
+                                throw new Exception("条码读取失败！");
+                            }
 
                             if (!temp.IsNullOrEmpty())
                             {
@@ -359,13 +372,27 @@ namespace WpfApp1
                             {
                                 torque1 = double.Parse(t.Content.ToString("F2"));
                             }
+                            else
+                            {
+                                throw new Exception("扭矩读取失败！");
+                            }
+
                             if (a.IsSuccess)
                             {
                                 angle1 = double.Parse(a.Content.ToString("F2"));
                             }
+                            else
+                            {
+                                throw new Exception("角度读取失败！");
+                            }
+
                             if (r.IsSuccess)
                             {
                                 result1 = r.Content;
+                            }
+                            else
+                            {
+                                throw new Exception("结果读取失败！");
                             }
 
                             string rest;
