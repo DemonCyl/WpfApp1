@@ -959,8 +959,8 @@ namespace WpfApp1
 
         public void ThreadCheck(object sender, EventArgs e)
         {
-            OperateResult<short> connect = splc.ReadInt16("DB2000.0");
-            if (connect.IsSuccess)
+            var check = splc.ReadUInt16("DB2000.0");
+            if (check.IsSuccess)
             {
                 PLCImage.Source = ITrue;
                 log.Info("PLC Connected!");
