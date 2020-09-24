@@ -23,6 +23,7 @@ namespace WpfApp1
 
         private GetInfoService service = new GetInfoService();
         private DispatcherTimer ShowTimer;
+        private DispatcherTimer timer;
         private ConfigData config;
         private BarCodeStr codeStr;
         //private Plc plc;
@@ -30,6 +31,7 @@ namespace WpfApp1
         private OperateResult connect;
         private GDbStr GunStr;
         private int markN = 0;
+        private bool remark = false;
         private List<GDbData> ReList = new List<GDbData>();
         private static BitmapImage ILogo = new BitmapImage(new Uri("/Images/logo.png", UriKind.Relative));
         private static BitmapImage IFalse = new BitmapImage(new Uri("/Images/01.png", UriKind.Relative));
@@ -83,18 +85,16 @@ namespace WpfApp1
                 }
 
                 connect = splc.ConnectServer();
-                if (connect.IsSuccess)
-                {
-                    PLCImage.Source = ITrue;
-                    log.Info("PLC Connected!");
 
-                    DataReload();
-                }
-                else
-                {
-                    PLCImage.Source = IFalse;
-                    log.Info("PLC Not Connected!");
-                }
+                #region 时间定时器
+                timer = new System.Windows.Threading.DispatcherTimer();
+                timer.Tick += new EventHandler(ThreadCheck);
+                timer.Interval = new TimeSpan(0, 0, 0, 5);
+                timer.Start();
+                #endregion
+
+
+
 
                 //if (plc.IsAvailable)
                 //{
@@ -421,12 +421,15 @@ namespace WpfApp1
                         }
                     }
                     #endregion
+
+                    remark = true;
                 }
                 catch (Exception exc)
                 {
                     log.Error("------PLC访问出错------");
                     log.Error(exc.Message);
                     dispatcherTimer.Stop();
+                    remark = false;
                 }
 
             };
@@ -930,22 +933,47 @@ namespace WpfApp1
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (MessageBoxX.Show("是否要关闭？", "确认", Application.Current.MainWindow, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //if (MessageBoxX.Show("是否要关闭？", "确认", Application.Current.MainWindow, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //{
+            //    e.Cancel = false;
+            //    //if (plc.IsConnected)
+            //    //{
+            //    //    plc.Close();
+            //    //    log.Info("PLC Disconnected!");
+            //    //}
+            //    if (connect.IsSuccess)
+            //    {
+            //        splc.ConnectClose();
+            //    }
+            //}
+            //else
+            //{
+            //    e.Cancel = true;
+            //}
+            if (connect.IsSuccess)
             {
-                e.Cancel = false;
-                //if (plc.IsConnected)
-                //{
-                //    plc.Close();
-                //    log.Info("PLC Disconnected!");
-                //}
-                if (connect.IsSuccess)
+                splc.ConnectClose();
+            }
+            log.Info("PLC Disconnected!");
+        }
+
+        public void ThreadCheck(object sender, EventArgs e)
+        {
+            OperateResult<short> connect = splc.ReadInt16("DB2000.0");
+            if (connect.IsSuccess)
+            {
+                PLCImage.Source = ITrue;
+                log.Info("PLC Connected!");
+
+                if (!remark)
                 {
-                    splc.ConnectClose();
+                    DataReload();
                 }
             }
             else
             {
-                e.Cancel = true;
+                PLCImage.Source = IFalse;
+                log.Info("PLC Not Connected!");
             }
         }
     }
