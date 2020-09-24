@@ -86,7 +86,7 @@ namespace WpfApp1
 
                 connect = splc.ConnectServer();
 
-                #region 时间定时器
+                #region PLC连接定时器
                 timer = new System.Windows.Threading.DispatcherTimer();
                 timer.Tick += new EventHandler(ThreadCheck);
                 timer.Interval = new TimeSpan(0, 0, 0, 5);
