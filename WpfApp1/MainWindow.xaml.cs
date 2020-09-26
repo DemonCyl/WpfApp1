@@ -248,7 +248,7 @@ namespace WpfApp1
                                     var barS = splc.ReadBool(codeStr.ResultStr);
                                     if (tempS.IsSuccess)
                                     {
-                                        temp = tempS.Content.Trim();
+                                        temp = tempS.Content.Replace("\0", "").Trim();
                                     }
                                     else
                                     {
@@ -319,7 +319,16 @@ namespace WpfApp1
                             var tempS = splc.ReadString(tStr, config.BarLengh);
                             if (tempS.IsSuccess)
                             {
-                                temp = tempS.Content.Trim();
+                                temp = tempS.Content.Replace("\0", "").Trim();
+                                if (temp.Length > 1)
+                                {
+                                    temp = temp.Substring(1, temp.Length - 1);
+                                }
+                                else
+                                {
+                                    temp = null;
+                                }
+
                             }
                             else
                             {
@@ -380,6 +389,8 @@ namespace WpfApp1
                             if (a.IsSuccess)
                             {
                                 angle1 = double.Parse(a.Content.ToString("F2"));
+
+                                angle1 = Math.Round(angle1, 2);
                             }
                             else
                             {
@@ -963,7 +974,7 @@ namespace WpfApp1
             if (check.IsSuccess)
             {
                 PLCImage.Source = ITrue;
-                log.Info("PLC Connected!");
+                //log.Info("PLC Connected!");
 
                 if (!remark)
                 {
@@ -973,7 +984,7 @@ namespace WpfApp1
             else
             {
                 PLCImage.Source = IFalse;
-                log.Info("PLC Not Connected!");
+                //log.Info("PLC Not Connected!");
             }
         }
     }

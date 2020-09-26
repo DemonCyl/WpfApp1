@@ -24,6 +24,11 @@ namespace WpfApp1.Entity
         [DisplayName("序号")]
         public int Num { get; set; }
         /// <summary>
+        /// 结果
+        /// </summary>
+        [DisplayName("结果")]
+        public string Result { get; set; }
+        /// <summary>
         /// 扭矩
         /// </summary>
         [DisplayName("扭矩")]
@@ -33,11 +38,6 @@ namespace WpfApp1.Entity
         /// </summary>
         [DisplayName("角度")]
         public double Angle { get; set; }
-        /// <summary>
-        /// 结果
-        /// </summary>
-        [DisplayName("结果")]
-        public string Result { get; set; }
 
     
     }

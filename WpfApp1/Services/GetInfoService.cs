@@ -170,7 +170,7 @@ namespace WpfApp1.Services
                     firstStr = 4866;
                     break;
                 case 04053:
-                    firstStr = 5174;
+                    firstStr = 5154;
                     break;
                 case 04061:
                     firstStr = 4290;
