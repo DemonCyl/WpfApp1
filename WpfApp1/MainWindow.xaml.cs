@@ -12,6 +12,8 @@ using WpfApp1.Services;
 using log4net;
 using HslCommunication;
 using HslCommunication.Profinet.Siemens;
+using System.Windows.Automation.Peers;
+using System.Windows.Controls;
 
 namespace WpfApp1
 {
@@ -37,6 +39,7 @@ namespace WpfApp1
         private static BitmapImage IFalse = new BitmapImage(new Uri("/Images/01.png", UriKind.Relative));
         private static BitmapImage ITrue = new BitmapImage(new Uri("/Images/02.png", UriKind.Relative));
         private ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private List<GongXuModel> l = new List<GongXuModel>();
 
         public MainWindow()
         {
@@ -92,6 +95,27 @@ namespace WpfApp1
                 timer.Interval = new TimeSpan(0, 0, 0, 5);
                 timer.Start();
                 #endregion
+
+
+                ListViewAutomationPeer lvap = new ListViewAutomationPeer(listView);
+                double rowMark = -1;
+                var listTimer = new DispatcherTimer();
+                listTimer.Tick += (s, e) =>
+                {
+                    var svap = lvap.GetPattern(PatternInterface.Scroll) as ScrollViewerAutomationPeer;
+                    var scroll = svap.Owner as ScrollViewer;
+                    if (rowMark == scroll.VerticalOffset)
+                    {
+                        scroll.ScrollToTop();
+                    }
+                    else
+                    {
+                        rowMark = scroll.VerticalOffset;
+                    scroll.ScrollToVerticalOffset(scroll.VerticalOffset + 1);
+                    }
+                };
+                listTimer.Interval = new TimeSpan(0, 0, 0, 5);
+                listTimer.Start();
 
 
 
@@ -487,191 +511,205 @@ namespace WpfApp1
         /// <param name="list">详情</param>
         private void SetStepData(int count, List<StationData> list)
         {
-            #region who care
-            switch (count)
+
+            list.ForEach(f =>
             {
-                case 1:
-                    Step1.Text = list[0].Name;
-                    StepImage1.Source = IFalse;
-                    break;
-                case 2:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    break;
-                case 3:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    break;
-                case 4:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    break;
-                case 5:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    break;
-                case 6:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    Step6.Text = list[5].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    break;
-                case 7:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    Step6.Text = list[5].Name;
-                    Step7.Text = list[6].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    StepImage7.Source = IFalse;
-                    break;
-                case 8:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    Step6.Text = list[5].Name;
-                    Step7.Text = list[6].Name;
-                    Step8.Text = list[7].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    StepImage7.Source = IFalse;
-                    StepImage8.Source = IFalse;
-                    break;
-                case 9:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    Step6.Text = list[5].Name;
-                    Step7.Text = list[6].Name;
-                    Step8.Text = list[7].Name;
-                    Step9.Text = list[8].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    StepImage7.Source = IFalse;
-                    StepImage8.Source = IFalse;
-                    StepImage9.Source = IFalse;
-                    break;
-                case 10:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    Step6.Text = list[5].Name;
-                    Step7.Text = list[6].Name;
-                    Step8.Text = list[7].Name;
-                    Step9.Text = list[8].Name;
-                    Step10.Text = list[9].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    StepImage7.Source = IFalse;
-                    StepImage8.Source = IFalse;
-                    StepImage9.Source = IFalse;
-                    StepImage10.Source = IFalse;
-                    break;
-                case 11:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    Step6.Text = list[5].Name;
-                    Step7.Text = list[6].Name;
-                    Step8.Text = list[7].Name;
-                    Step9.Text = list[8].Name;
-                    Step10.Text = list[9].Name;
-                    Step11.Text = list[10].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    StepImage7.Source = IFalse;
-                    StepImage8.Source = IFalse;
-                    StepImage9.Source = IFalse;
-                    StepImage10.Source = IFalse;
-                    StepImage11.Source = IFalse;
-                    break;
-                case 12:
-                    Step1.Text = list[0].Name;
-                    Step2.Text = list[1].Name;
-                    Step3.Text = list[2].Name;
-                    Step4.Text = list[3].Name;
-                    Step5.Text = list[4].Name;
-                    Step6.Text = list[5].Name;
-                    Step7.Text = list[6].Name;
-                    Step8.Text = list[7].Name;
-                    Step9.Text = list[8].Name;
-                    Step10.Text = list[9].Name;
-                    Step11.Text = list[10].Name;
-                    Step12.Text = list[11].Name;
-                    StepImage1.Source = IFalse;
-                    StepImage2.Source = IFalse;
-                    StepImage3.Source = IFalse;
-                    StepImage4.Source = IFalse;
-                    StepImage5.Source = IFalse;
-                    StepImage6.Source = IFalse;
-                    StepImage7.Source = IFalse;
-                    StepImage8.Source = IFalse;
-                    StepImage9.Source = IFalse;
-                    StepImage10.Source = IFalse;
-                    StepImage11.Source = IFalse;
-                    StepImage12.Source = IFalse;
-                    break;
-            }
+                l.Add(new GongXuModel()
+                {
+                    Status = IFalse,
+                    Name = f.Name,
+                    sType = f.Type
+                });
+            });
+
+            listView.ItemsSource = l;
+
+            #region who care
+            //switch (count)
+            //{
+            //    case 1:
+            //        Step1.Text = list[0].Name;
+            //        StepImage1.Source = IFalse;
+            //        break;
+            //    case 2:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        break;
+            //    case 3:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        break;
+            //    case 4:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        break;
+            //    case 5:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        break;
+            //    case 6:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        Step6.Text = list[5].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        StepImage6.Source = IFalse;
+            //        break;
+            //    case 7:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        Step6.Text = list[5].Name;
+            //        Step7.Text = list[6].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        StepImage6.Source = IFalse;
+            //        StepImage7.Source = IFalse;
+            //        break;
+            //    case 8:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        Step6.Text = list[5].Name;
+            //        Step7.Text = list[6].Name;
+            //        Step8.Text = list[7].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        StepImage6.Source = IFalse;
+            //        StepImage7.Source = IFalse;
+            //        StepImage8.Source = IFalse;
+            //        break;
+            //    case 9:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        Step6.Text = list[5].Name;
+            //        Step7.Text = list[6].Name;
+            //        Step8.Text = list[7].Name;
+            //        Step9.Text = list[8].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        StepImage6.Source = IFalse;
+            //        StepImage7.Source = IFalse;
+            //        StepImage8.Source = IFalse;
+            //        StepImage9.Source = IFalse;
+            //        break;
+            //    case 10:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        Step6.Text = list[5].Name;
+            //        Step7.Text = list[6].Name;
+            //        Step8.Text = list[7].Name;
+            //        Step9.Text = list[8].Name;
+            //        Step10.Text = list[9].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        StepImage6.Source = IFalse;
+            //        StepImage7.Source = IFalse;
+            //        StepImage8.Source = IFalse;
+            //        StepImage9.Source = IFalse;
+            //        StepImage10.Source = IFalse;
+            //        break;
+            //    case 11:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        Step6.Text = list[5].Name;
+            //        Step7.Text = list[6].Name;
+            //        Step8.Text = list[7].Name;
+            //        Step9.Text = list[8].Name;
+            //        Step10.Text = list[9].Name;
+            //        Step11.Text = list[10].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        StepImage6.Source = IFalse;
+            //        StepImage7.Source = IFalse;
+            //        StepImage8.Source = IFalse;
+            //        StepImage9.Source = IFalse;
+            //        StepImage10.Source = IFalse;
+            //        StepImage11.Source = IFalse;
+            //        break;
+            //    case 12:
+            //        Step1.Text = list[0].Name;
+            //        Step2.Text = list[1].Name;
+            //        Step3.Text = list[2].Name;
+            //        Step4.Text = list[3].Name;
+            //        Step5.Text = list[4].Name;
+            //        Step6.Text = list[5].Name;
+            //        Step7.Text = list[6].Name;
+            //        Step8.Text = list[7].Name;
+            //        Step9.Text = list[8].Name;
+            //        Step10.Text = list[9].Name;
+            //        Step11.Text = list[10].Name;
+            //        Step12.Text = list[11].Name;
+            //        StepImage1.Source = IFalse;
+            //        StepImage2.Source = IFalse;
+            //        StepImage3.Source = IFalse;
+            //        StepImage4.Source = IFalse;
+            //        StepImage5.Source = IFalse;
+            //        StepImage6.Source = IFalse;
+            //        StepImage7.Source = IFalse;
+            //        StepImage8.Source = IFalse;
+            //        StepImage9.Source = IFalse;
+            //        StepImage10.Source = IFalse;
+            //        StepImage11.Source = IFalse;
+            //        StepImage12.Source = IFalse;
+            //        break;
+            //}
             #endregion
+
         }
 
         /// <summary>
@@ -681,6 +719,7 @@ namespace WpfApp1
         /// <param name="GWNo">工位号</param>
         private void ModifyStep(int type, int GWNo)
         {
+
             switch (GWNo)
             {
                 case 20: //20工位
@@ -730,211 +769,305 @@ namespace WpfApp1
                     }
                     break;
                 case 04052:
-                    switch (type)
+                    if (type == 100)
                     {
-                        case 100:
-                            StepImage1.Source = ITrue;
-                            StepImage2.Source = IFalse;
-                            StepImage3.Source = IFalse;
-                            StepImage4.Source = IFalse;
-                            StepImage5.Source = IFalse;
-                            StepImage6.Source = IFalse;
-                            StepImage7.Source = IFalse;
-                            StepImage8.Source = IFalse;
-                            StepImage9.Source = IFalse;
-                            StepImage10.Source = IFalse;
-                            StepImage11.Source = IFalse;
-                            break;
-                        case 110:
-                            StepImage2.Source = ITrue;
-                            break;
-                        case 150:
-                            StepImage3.Source = ITrue;
-                            break;
-                        case 200:
-                            StepImage4.Source = ITrue;
-                            break;
-                        case 400:
-                            StepImage5.Source = ITrue;
-                            break;
-                        case 700:
-                            StepImage6.Source = ITrue;
-                            break;
-                        case 900:
-                            StepImage7.Source = ITrue;
-                            break;
-                        case 1100:
-                            StepImage8.Source = ITrue;
-                            break;
-                        case 1300:
-                            StepImage9.Source = ITrue;
-                            break;
-                        case 1400:
-                            StepImage10.Source = ITrue;
-                            break;
-                        case 1500:
-                            StepImage11.Source = ITrue;
-                            break;
+                        l.ForEach(f =>
+                        {
+                            f.Status = (f.sType == type ? ITrue : IFalse);
+                        });
                     }
+                    else
+                    {
+                        l.ForEach(f =>
+                        {
+                            if (type >= 600 && type <= 699 && f.sType == 600)
+                            {
+                                f.Status = ITrue;
+                            }
+                            else if (type >= 800 && type <= 899 && f.sType == 800)
+                            {
+                                f.Status = ITrue;
+                            }
+                            else if (type >= 1000 && type <= 1099 && f.sType == 1000)
+                            {
+                                f.Status = ITrue;
+                            }
+                            else if (type >= 1200 && type <= 1299 && f.sType == 1200)
+                            {
+                                f.Status = ITrue;
+                            }
+                            else
+                            {
+                                f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
+                            }
+                        });
+                    }
+                    //switch (type)
+                    //{
+                    //    case 100:
+                    //        StepImage1.Source = ITrue;
+                    //        StepImage2.Source = IFalse;
+                    //        StepImage3.Source = IFalse;
+                    //        StepImage4.Source = IFalse;
+                    //        StepImage5.Source = IFalse;
+                    //        StepImage6.Source = IFalse;
+                    //        StepImage7.Source = IFalse;
+                    //        StepImage8.Source = IFalse;
+                    //        StepImage9.Source = IFalse;
+                    //        StepImage10.Source = IFalse;
+                    //        StepImage11.Source = IFalse;
+                    //        break;
+                    //    case 110:
+                    //        StepImage2.Source = ITrue;
+                    //        break;
+                    //    case 150:
+                    //        StepImage3.Source = ITrue;
+                    //        break;
+                    //    case 200:
+                    //        StepImage4.Source = ITrue;
+                    //        break;
+                    //    case 400:
+                    //        StepImage5.Source = ITrue;
+                    //        break;
+                    //    case 700:
+                    //        StepImage6.Source = ITrue;
+                    //        break;
+                    //    case 900:
+                    //        StepImage7.Source = ITrue;
+                    //        break;
+                    //    case 1100:
+                    //        StepImage8.Source = ITrue;
+                    //        break;
+                    //    case 1300:
+                    //        StepImage9.Source = ITrue;
+                    //        break;
+                    //    case 1400:
+                    //        StepImage10.Source = ITrue;
+                    //        break;
+                    //    case 1500:
+                    //        StepImage11.Source = ITrue;
+                    //        break;
+                    //}
                     break;
                 case 04053:
-                    switch (type)
+                    if (type == 100)
                     {
-                        case 100:
-                            StepImage1.Source = ITrue;
-                            StepImage2.Source = IFalse;
-                            StepImage3.Source = IFalse;
-                            StepImage4.Source = IFalse;
-                            StepImage5.Source = IFalse;
-                            StepImage6.Source = IFalse;
-                            StepImage7.Source = IFalse;
-                            StepImage8.Source = IFalse;
-                            StepImage9.Source = IFalse;
-                            StepImage10.Source = IFalse;
-                            StepImage11.Source = IFalse;
-                            StepImage12.Source = IFalse;
-                            break;
-                        case 110:
-                            StepImage2.Source = ITrue;
-                            break;
-                        case 150:
-                            StepImage3.Source = ITrue;
-                            break;
-                        case 200:
-                            StepImage4.Source = ITrue;
-                            break;
-                        case 300:
-                            StepImage5.Source = ITrue;
-                            break;
-                        case 400:
-                            StepImage6.Source = ITrue;
-                            break;
-                        case 500:
-                            StepImage7.Source = ITrue;
-                            break;
-                        case 600:
-                            StepImage8.Source = ITrue;
-                            break;
-                        case 700:
-                            StepImage9.Source = ITrue;
-                            break;
-                        case 800:
-                            StepImage10.Source = ITrue;
-                            break;
-                        case 900:
-                            StepImage11.Source = ITrue;
-                            break;
-                        case 1000:
-                            StepImage12.Source = ITrue;
-                            break;
+                        l.ForEach(f =>
+                        {
+                            f.Status = (f.sType == type ? ITrue : IFalse);
+                        });
                     }
+                    else
+                    {
+                        l.ForEach(f =>
+                        {
+                            f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
+                        });
+                    }
+                    //switch (type)
+                    //{
+                    //    case 100:
+                    //        StepImage1.Source = ITrue;
+                    //        StepImage2.Source = IFalse;
+                    //        StepImage3.Source = IFalse;
+                    //        StepImage4.Source = IFalse;
+                    //        StepImage5.Source = IFalse;
+                    //        StepImage6.Source = IFalse;
+                    //        StepImage7.Source = IFalse;
+                    //        StepImage8.Source = IFalse;
+                    //        StepImage9.Source = IFalse;
+                    //        StepImage10.Source = IFalse;
+                    //        StepImage11.Source = IFalse;
+                    //        StepImage12.Source = IFalse;
+                    //        break;
+                    //    case 110:
+                    //        StepImage2.Source = ITrue;
+                    //        break;
+                    //    case 150:
+                    //        StepImage3.Source = ITrue;
+                    //        break;
+                    //    case 200:
+                    //        StepImage4.Source = ITrue;
+                    //        break;
+                    //    case 300:
+                    //        StepImage5.Source = ITrue;
+                    //        break;
+                    //    case 400:
+                    //        StepImage6.Source = ITrue;
+                    //        break;
+                    //    case 500:
+                    //        StepImage7.Source = ITrue;
+                    //        break;
+                    //    case 600:
+                    //        StepImage8.Source = ITrue;
+                    //        break;
+                    //    case 700:
+                    //        StepImage9.Source = ITrue;
+                    //        break;
+                    //    case 800:
+                    //        StepImage10.Source = ITrue;
+                    //        break;
+                    //    case 900:
+                    //        StepImage11.Source = ITrue;
+                    //        break;
+                    //    case 1000:
+                    //        StepImage12.Source = ITrue;
+                    //        break;
+                    //}
                     break;
                 case 04061:
-                    switch (type)
+                    if (type == 100)
                     {
-                        case 100:
-                            StepImage1.Source = ITrue;
-                            StepImage2.Source = IFalse;
-                            StepImage3.Source = IFalse;
-                            StepImage4.Source = IFalse;
-                            StepImage5.Source = IFalse;
-                            StepImage6.Source = IFalse;
-                            StepImage7.Source = IFalse;
-                            StepImage8.Source = IFalse;
-                            StepImage9.Source = IFalse;
-                            StepImage10.Source = IFalse;
-                            StepImage11.Source = IFalse;
-                            StepImage12.Source = IFalse;
-                            break;
-                        case 110:
-                            StepImage2.Source = ITrue;
-                            break;
-                        case 200:
-                            StepImage3.Source = ITrue;
-                            break;
-                        case 300:
-                            StepImage4.Source = ITrue;
-                            break;
-                        case 600:
-                            StepImage5.Source = ITrue;
-                            break;
-                        case 800:
-                            StepImage6.Source = ITrue;
-                            break;
-                        case 900:
-                            StepImage7.Source = ITrue;
-                            break;
-                        case 1400:
-                            StepImage8.Source = ITrue;
-                            break;
-                        case 1600:
-                            StepImage9.Source = ITrue;
-                            break;
-                        case 1800:
-                            StepImage10.Source = ITrue;
-                            break;
-                        case 1900:
-                            StepImage11.Source = ITrue;
-                            break;
-                        case 2000:
-                            StepImage12.Source = ITrue;
-                            break;
+                        l.ForEach(f =>
+                        {
+                            f.Status = (f.sType == type ? ITrue : IFalse);
+                        });
                     }
+                    else
+                    {
+                        l.ForEach(f =>
+                        {
+                            if (type >= 1300 && type <= 1399 && f.sType == 1300)
+                            {
+                                f.Status = ITrue;
+                            }
+                            else if (type >= 1500 && type <= 1599 && f.sType == 1500)
+                            {
+                                f.Status = ITrue;
+                            }
+                            else if (type >= 1700 && type <= 1799 && f.sType == 1700)
+                            {
+                                f.Status = ITrue;
+                            }
+                            else
+                            {
+                                f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
+                            }
+                        });
+                    }
+
+                    //switch (type)
+                    //{
+                    //    case 100:
+                    //        StepImage1.Source = ITrue;
+                    //        StepImage2.Source = IFalse;
+                    //        StepImage3.Source = IFalse;
+                    //        StepImage4.Source = IFalse;
+                    //        StepImage5.Source = IFalse;
+                    //        StepImage6.Source = IFalse;
+                    //        StepImage7.Source = IFalse;
+                    //        StepImage8.Source = IFalse;
+                    //        StepImage9.Source = IFalse;
+                    //        StepImage10.Source = IFalse;
+                    //        StepImage11.Source = IFalse;
+                    //        StepImage12.Source = IFalse;
+                    //        break;
+                    //    case 110:
+                    //        StepImage2.Source = ITrue;
+                    //        break;
+                    //    case 200:
+                    //        StepImage3.Source = ITrue;
+                    //        break;
+                    //    case 300:
+                    //        StepImage4.Source = ITrue;
+                    //        break;
+                    //    case 600:
+                    //        StepImage5.Source = ITrue;
+                    //        break;
+                    //    case 800:
+                    //        StepImage6.Source = ITrue;
+                    //        break;
+                    //    case 900:
+                    //        StepImage7.Source = ITrue;
+                    //        break;
+                    //    case 1400:
+                    //        StepImage8.Source = ITrue;
+                    //        break;
+                    //    case 1600:
+                    //        StepImage9.Source = ITrue;
+                    //        break;
+                    //    case 1800:
+                    //        StepImage10.Source = ITrue;
+                    //        break;
+                    //    case 1900:
+                    //        StepImage11.Source = ITrue;
+                    //        break;
+                    //    case 2000:
+                    //        StepImage12.Source = ITrue;
+                    //        break;
+                    //}
                     break;
                 case 04063:
-                    switch (type)
+                    if (type == 100)
                     {
-                        case 106:
-                            StepImage1.Source = ITrue;
-                            StepImage2.Source = IFalse;
-                            StepImage3.Source = IFalse;
-                            StepImage4.Source = IFalse;
-                            StepImage5.Source = IFalse;
-                            StepImage6.Source = IFalse;
-                            StepImage7.Source = IFalse;
-                            StepImage8.Source = IFalse;
-                            StepImage9.Source = IFalse;
-                            StepImage10.Source = IFalse;
-                            StepImage11.Source = IFalse;
-                            StepImage12.Source = IFalse;
-                            break;
-                        case 110:
-                            StepImage2.Source = ITrue;
-                            break;
-                        case 150:
-                            StepImage3.Source = ITrue;
-                            break;
-                        case 500:
-                            StepImage4.Source = ITrue;
-                            break;
-                        case 700:
-                            StepImage5.Source = ITrue;
-                            break;
-                        case 900:
-                            StepImage6.Source = ITrue;
-                            break;
-                        case 1000:
-                            StepImage7.Source = ITrue;
-                            break;
-                        case 1300:
-                            StepImage8.Source = ITrue;
-                            break;
-                        case 1400:
-                            StepImage9.Source = ITrue;
-                            break;
-                        case 1500:
-                            StepImage10.Source = ITrue;
-                            break;
-                        case 1600:
-                            StepImage11.Source = ITrue;
-                            break;
-                        case 2100:
-                            StepImage12.Source = ITrue;
-                            break;
+                        l.ForEach(f =>
+                        {
+                            f.Status = (f.sType == type ? ITrue : IFalse);
+                        });
                     }
+                    else
+                    {
+                        l.ForEach(f =>
+                        {
+                            f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
+                        });
+                    }
+                    //switch (type)
+                    //{
+                    //    case 106:
+                    //        StepImage1.Source = ITrue;
+                    //        StepImage2.Source = IFalse;
+                    //        StepImage3.Source = IFalse;
+                    //        StepImage4.Source = IFalse;
+                    //        StepImage5.Source = IFalse;
+                    //        StepImage6.Source = IFalse;
+                    //        StepImage7.Source = IFalse;
+                    //        StepImage8.Source = IFalse;
+                    //        StepImage9.Source = IFalse;
+                    //        StepImage10.Source = IFalse;
+                    //        StepImage11.Source = IFalse;
+                    //        StepImage12.Source = IFalse;
+                    //        break;
+                    //    case 110:
+                    //        StepImage2.Source = ITrue;
+                    //        break;
+                    //    case 150:
+                    //        StepImage3.Source = ITrue;
+                    //        break;
+                    //    case 500:
+                    //        StepImage4.Source = ITrue;
+                    //        break;
+                    //    case 700:
+                    //        StepImage5.Source = ITrue;
+                    //        break;
+                    //    case 900:
+                    //        StepImage6.Source = ITrue;
+                    //        break;
+                    //    case 1000:
+                    //        StepImage7.Source = ITrue;
+                    //        break;
+                    //    case 1300:
+                    //        StepImage8.Source = ITrue;
+                    //        break;
+                    //    case 1400:
+                    //        StepImage9.Source = ITrue;
+                    //        break;
+                    //    case 1500:
+                    //        StepImage10.Source = ITrue;
+                    //        break;
+                    //    case 1600:
+                    //        StepImage11.Source = ITrue;
+                    //        break;
+                    //    case 2100:
+                    //        StepImage12.Source = ITrue;
+                    //        break;
+                    //}
                     break;
             }
 
+            listView.ItemsSource = null;
+            listView.ItemsSource = l;
+            listView.Items.Refresh();
         }
 
         /// <summary>
@@ -966,7 +1099,7 @@ namespace WpfApp1
                 splc.ConnectClose();
             }
             log.Info("PLC Disconnected!");
-        }
+    }
 
         public void ThreadCheck(object sender, EventArgs e)
         {

@@ -28,6 +28,27 @@
                             <GradientStop Color="White" Offset="0"/>
                         </LinearGradientBrush>
                     </Border.BorderBrush>
+                    <ListView x:Name="listView" ItemsSource="{Binding .}"  Background="SteelBlue">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch" FlowDirection="LeftToRight">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" ></RowDefinition>
+                                        <RowDefinition Height="Auto" ></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"></ColumnDefinition>
+                                        <ColumnDefinition Width="250"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding Status}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="15" Height="13"/>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" TextWrapping="Wrap"
+                                               Height="Auto" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"/>
+                                    <TextBlock Text="{Binding sType}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Visibility="Hidden"
+                                               Height="Auto" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </Border>
                 <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="112" Width="181" Canvas.Top="327" Canvas.Left="335">
                     <Border.BorderBrush>
