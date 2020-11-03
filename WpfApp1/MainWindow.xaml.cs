@@ -92,7 +92,7 @@ namespace WpfApp1
                 #region PLC连接定时器
                 timer = new System.Windows.Threading.DispatcherTimer();
                 timer.Tick += new EventHandler(ThreadCheck);
-                timer.Interval = new TimeSpan(0, 0, 0, 5);
+                timer.Interval = new TimeSpan(0, 0, 0, 15);
                 timer.Start();
                 #endregion
 
@@ -111,7 +111,7 @@ namespace WpfApp1
                     else
                     {
                         rowMark = scroll.VerticalOffset;
-                    scroll.ScrollToVerticalOffset(scroll.VerticalOffset + 1);
+                        scroll.ScrollToVerticalOffset(scroll.VerticalOffset + 1);
                     }
                 };
                 listTimer.Interval = new TimeSpan(0, 0, 0, 5);
@@ -208,6 +208,7 @@ namespace WpfApp1
                     if (sta.IsSuccess)
                     {
                         ModifyStep(sta.Content, config.GWNo);
+                        // log.Debug(sta.Content);
                     }
                     else
                     {
@@ -447,7 +448,7 @@ namespace WpfApp1
                                     rest = "NG";
                                 }
                                 markN += 1;
-                                ReList.Add(new GDbData(markN, torque1, angle1, rest));
+                                ReList.Add(new GDbData(i, torque1, angle1, rest));
                                 ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
                                 DataList.ItemsSource = null;
                                 DataList.ItemsSource = ReList;
@@ -456,6 +457,14 @@ namespace WpfApp1
                         }
                     }
                     #endregion
+
+                    //报警信息
+                    var info = splc.ReadUInt16(service.GetErrorStr(config.StationNo));
+                    if (info.IsSuccess)
+                    {
+                        var mes = config.InfoDatas.Find(f => f.Type == info.Content);
+                        ErrorInfo.Text = mes == null ? "" : mes.ErrorInfo;
+                    }
 
                     remark = true;
                 }
@@ -769,7 +778,18 @@ namespace WpfApp1
                     }
                     break;
                 case 04052:
-                    if (type == 100)
+                    if (type == 0)
+                    {
+                        l.ForEach(f =>
+                        {
+                            f.Status = IFalse;
+                        });
+                        Barcode1.Text = "";
+                        Barcode2.Text = "";
+                        Barcode3.Text = "";
+                        Barcode4.Text = "";
+                    }
+                    else if (type == 100 || type == 110 || type == 300) 
                     {
                         l.ForEach(f =>
                         {
@@ -850,7 +870,18 @@ namespace WpfApp1
                     //}
                     break;
                 case 04053:
-                    if (type == 100)
+                    if (type == 0)
+                    {
+                        l.ForEach(f =>
+                        {
+                            f.Status = IFalse;
+                        });
+                        Barcode1.Text = "";
+                        Barcode2.Text = "";
+                        Barcode3.Text = "";
+                        Barcode4.Text = "";
+                    }
+                    else if (type == 100 || type == 110 || type == 300)
                     {
                         l.ForEach(f =>
                         {
@@ -916,7 +947,18 @@ namespace WpfApp1
                     //}
                     break;
                 case 04061:
-                    if (type == 100)
+                    if (type == 0)
+                    {
+                        l.ForEach(f =>
+                        {
+                            f.Status = IFalse;
+                        });
+                        Barcode1.Text = "";
+                        Barcode2.Text = "";
+                        Barcode3.Text = "";
+                        Barcode4.Text = "";
+                    }
+                    else if (type == 100 || type == 110 || type == 300)
                     {
                         l.ForEach(f =>
                         {
@@ -998,7 +1040,18 @@ namespace WpfApp1
                     //}
                     break;
                 case 04063:
-                    if (type == 100)
+                    if (type == 0)
+                    {
+                        l.ForEach(f =>
+                        {
+                            f.Status = IFalse;
+                        });
+                        Barcode1.Text = "";
+                        Barcode2.Text = "";
+                        Barcode3.Text = "";
+                        Barcode4.Text = "";
+                    }
+                    else if (type == 100 || type == 110 || type == 300)
                     {
                         l.ForEach(f =>
                         {
@@ -1099,7 +1152,7 @@ namespace WpfApp1
                 splc.ConnectClose();
             }
             log.Info("PLC Disconnected!");
-    }
+        }
 
         public void ThreadCheck(object sender, EventArgs e)
         {

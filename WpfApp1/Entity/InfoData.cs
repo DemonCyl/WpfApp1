@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WpfApp1.Entity
 {
-    public class StationData
+    public class InfoData
     {
-        public string Name { get; set; }
+        public string ErrorInfo { get; set; }
 
         public int Type { get; set; }
     }

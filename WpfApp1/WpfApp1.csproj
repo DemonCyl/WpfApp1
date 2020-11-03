@@ -110,6 +110,7 @@
     <Compile Include="Entity\GDbData.cs" />
     <Compile Include="Entity\GDbStr.cs" />
     <Compile Include="Entity\GongXuModel.cs" />
+    <Compile Include="Entity\InfoData.cs" />
     <Compile Include="Entity\StationData.cs" />
     <Compile Include="Entity\ConfigData.cs" />
     <Compile Include="Services\GetInfoService.cs" />

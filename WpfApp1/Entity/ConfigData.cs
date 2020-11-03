@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WpfApp1.Entity
 {
-    class ConfigData
+    public class ConfigData
     {
 
 
@@ -42,5 +42,7 @@ namespace WpfApp1.Entity
         public string ImageUri { get; set; }
 
         public ushort BarLengh { get; set; }
+
+        public List<InfoData> InfoDatas { get; set; }
     }
 }

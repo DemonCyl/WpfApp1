@@ -7,14 +7,21 @@
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="470" Width="800">
     <Grid Background="SteelBlue">
 
         <Viewbox VerticalAlignment="Top" >
-            <Canvas x:Name="Canvas1" Width="840" Height=" 450">
+            <Canvas x:Name="Canvas1" Width="840" Height=" 470">
                 <Canvas x:Name="imageCanvas" Width="505" Height="268"  Canvas.Left="335" Canvas.Top="59">
-                    <Image x:Name="pImage" Width="505" Height="268" Stretch="Fill"></Image>
+                    <Image x:Name="pImage" Width="505" Height="268" Stretch="Fill"/>
                 </Canvas>
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="28" Width="840" Canvas.Top="439">
+                    <Border.BorderBrush>
+                        <LinearGradientBrush SpreadMethod="Repeat" StartPoint="0, 5" EndPoint="5, 0" MappingMode="Absolute">
+                            <GradientStop Color="White" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+                </Border>
                 <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="59" Width="840">
                     <Border.BorderBrush>
                         <LinearGradientBrush SpreadMethod="Repeat" StartPoint="0, 5" EndPoint="5, 0" MappingMode="Absolute">
@@ -33,12 +40,12 @@
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Stretch" FlowDirection="LeftToRight">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" ></RowDefinition>
-                                        <RowDefinition Height="Auto" ></RowDefinition>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20"></ColumnDefinition>
-                                        <ColumnDefinition Width="250"></ColumnDefinition>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="250"/>
                                     </Grid.ColumnDefinitions>
                                     <Image Source="{Binding Status}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="15" Height="13"/>
                                     <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" TextWrapping="Wrap"
@@ -53,9 +60,7 @@
                 <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="112" Width="181" Canvas.Top="327" Canvas.Left="335">
                     <Border.BorderBrush>
                         <LinearGradientBrush SpreadMethod="Repeat" StartPoint="0, 5" EndPoint="5, 0" MappingMode="Absolute">
-                            <LinearGradientBrush.GradientStops>
-                                <GradientStop Color="White" Offset="0"/>
-                            </LinearGradientBrush.GradientStops>
+                            <GradientStop Color="White" Offset="0"/>
                         </LinearGradientBrush>
                     </Border.BorderBrush>
                 </Border>
@@ -82,14 +87,14 @@
                      CanUserAddRows="False" Canvas.Left="656" Canvas.Top="327" >
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
                             <Setter Property="VerticalAlignment" Value="Center" />
                             <Setter Property="Background" Value="Transparent" />
-                            <Setter Property="Height" Value="20"></Setter>
-                            <Setter Property="BorderThickness" Value="0"></Setter>
+                            <Setter Property="Height" Value="20"/>
+                            <Setter Property="BorderThickness" Value="0"/>
                             <Setter Property="BorderBrush">
                                 <Setter.Value>
-                                    <SolidColorBrush Color="White" Opacity="0.8"></SolidColorBrush>
+                                    <SolidColorBrush Color="White" Opacity="0.8"/>
                                 </Setter.Value>
                             </Setter>
                         </Style>
@@ -146,9 +151,7 @@
                 <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="112" Width="335" Canvas.Top="327">
                     <Border.BorderBrush>
                         <LinearGradientBrush SpreadMethod="Repeat" StartPoint="0, 5" EndPoint="5, 0" MappingMode="Absolute">
-                            <LinearGradientBrush.GradientStops>
-                                <GradientStop Color="White" Offset="0"/>
-                            </LinearGradientBrush.GradientStops>
+                            <GradientStop Color="White" Offset="0"/>
                         </LinearGradientBrush>
                     </Border.BorderBrush>
                 </Border>
@@ -213,7 +216,7 @@
                 <TextBlock x:Name="Step12" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="243" Canvas.Left="47" Canvas.Top="262"/>
 
-                <Image x:Name="StepImage1" Width="15" Height="13" Canvas.Left="18" Canvas.Top="64"></Image>
+                <Image x:Name="StepImage1" Width="15" Height="13" Canvas.Left="18" Canvas.Top="64"/>
                 <Image x:Name="StepImage2" Width="15" Height="13" Canvas.Left="18" Canvas.Top="82"/>
                 <Image x:Name="StepImage3" Width="15" Height="13" Canvas.Left="18" Canvas.Top="100"/>
                 <Image x:Name="StepImage4" Width="15" Height="13" Canvas.Left="18" Canvas.Top="118"/>
@@ -239,6 +242,9 @@
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="112" Width="141" Canvas.Left="515" Canvas.Top="327"/>
                 <TextBlock x:Name="Barcode4" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="412"/>
+                <Label FontSize="12" Foreground="#F0E68C" Content="报警:" FontFamily="Microsoft Yahei" Canvas.Left="13" Canvas.Top="441"/>
+                <TextBlock x:Name="ErrorInfo" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="12"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="768" Canvas.Left="62" Canvas.Top="444"/>
                 <!--<ListView x:Name="listView_Copy" ItemsSource="{Binding .}" Canvas.Top="64" Height="264" Width="40" Background="#EE3BABFF" FontFamily="Microsoft Yahei" Canvas.Left="10" Foreground="White" >
                     <ListView.Resources>
                         <Style TargetType="{x:Type GridViewColumnHeader}" >

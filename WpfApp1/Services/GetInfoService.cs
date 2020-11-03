@@ -49,34 +49,34 @@ namespace WpfApp1.Services
             switch (value)
             {
                 case 1:
-                    conn = "DB2000.5110"; //DBW
+                    conn = "DB2000.4270"; //DBW
                     break;
                 case 2:
-                    conn = "DB2000.5112";
+                    conn = "DB2000.4272";
                     break;
                 case 3:
-                    conn = "DB2000.5114";
+                    conn = "DB2000.4274";
                     break;
                 case 4:
-                    conn = "DB2000.5116";
+                    conn = "DB2000.4276";
                     break;
                 case 5:
-                    conn = "DB2000.5118";
+                    conn = "DB2000.4278";
                     break;
                 case 6:
-                    conn = "DB2000.5120";
+                    conn = "DB2000.4280";
                     break;
                 case 7:
-                    conn = "DB2000.5122";
+                    conn = "DB2000.4282";
                     break;
                 case 8:
-                    conn = "DB2000.5124";
+                    conn = "DB2000.4284";
                     break;
                 case 9:
-                    conn = "DB2000.5126";
+                    conn = "DB2000.4286";
                     break;
                 case 10:
-                    conn = "DB2000.5128";
+                    conn = "DB2000.4288";
                     break;
             }
             return conn;
@@ -180,6 +180,30 @@ namespace WpfApp1.Services
                     break;
             }
             return firstStr;
+        }
+
+        public string GetErrorStr(int value)
+        {
+            string conn = null;
+            switch (value)
+            {
+                case 1:
+                    conn = "DB2000.5542";  //DBW
+                    break;
+                case 2:
+                    conn = "DB2000.5544";
+                    break;
+                case 3:
+                    conn = "DB2000.5546";
+                    break;
+                case 4:
+                    conn = "DB2000.5548";
+                    break;
+                case 5:
+                    conn = "DB2000.5550";
+                    break;
+            }
+            return conn;
         }
     }
 }
