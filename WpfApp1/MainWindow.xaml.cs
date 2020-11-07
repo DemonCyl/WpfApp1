@@ -14,6 +14,9 @@ using HslCommunication;
 using HslCommunication.Profinet.Siemens;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
+using System.IO.Ports;
+using System.Threading;
+using WpfApp1.DAL;
 
 namespace WpfApp1
 {
@@ -26,20 +29,28 @@ namespace WpfApp1
         private GetInfoService service = new GetInfoService();
         private DispatcherTimer ShowTimer;
         private DispatcherTimer timer;
+        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
         private ConfigData config;
         private BarCodeStr codeStr;
+        private ProductConfig product;
+        private SerialPort serialPort;
         //private Plc plc;
         private SiemensS7Net splc;
         private OperateResult connect;
         private GDbStr GunStr;
         private int markN = 0;
+        private int barCount = 0;
         private bool remark = false;
+        private bool saveMark = false;
         private List<GDbData> ReList = new List<GDbData>();
         private static BitmapImage ILogo = new BitmapImage(new Uri("/Images/logo.png", UriKind.Relative));
         private static BitmapImage IFalse = new BitmapImage(new Uri("/Images/01.png", UriKind.Relative));
         private static BitmapImage ITrue = new BitmapImage(new Uri("/Images/02.png", UriKind.Relative));
         private ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private List<GongXuModel> l = new List<GongXuModel>();
+        private List<string> barList = new List<string>();
+        private List<string> yzList = new List<string>();
+        private MainDAL dal;
 
         public MainWindow()
         {
@@ -58,6 +69,7 @@ namespace WpfApp1
             {
                 //读取本地配置JSON文件
                 LoadJsonData();
+                dal = new MainDAL(config);
                 Init();
                 //MainPlanLoad();
                 //plc = new Plc(CpuType.S71200, config.IpAdress, 0, 1);
@@ -89,12 +101,7 @@ namespace WpfApp1
 
                 connect = splc.ConnectServer();
 
-                #region PLC连接定时器
-                timer = new System.Windows.Threading.DispatcherTimer();
-                timer.Tick += new EventHandler(ThreadCheck);
-                timer.Interval = new TimeSpan(0, 0, 0, 15);
-                timer.Start();
-                #endregion
+
 
 
                 ListViewAutomationPeer lvap = new ListViewAutomationPeer(listView);
@@ -118,30 +125,6 @@ namespace WpfApp1
                 listTimer.Start();
 
 
-
-
-                //if (plc.IsAvailable)
-                //{
-
-                //    var result = plc.Open();
-                //    if (!plc.IsConnected)
-                //    {
-                //        PLCImage.Source = IFalse;
-                //        log.Info("PLC Not Connected!");
-                //    }
-                //    else
-                //    {
-                //        PLCImage.Source = ITrue;
-                //        log.Info("PLC Connected!");
-
-                //        DataReload();
-                //    }
-                //}
-                //else
-                //{
-                //    PLCImage.Source = IFalse;
-                //    log.Info("PLC Not Connected!");
-                //}
             }
             catch (Exception e)
             {
@@ -196,55 +179,51 @@ namespace WpfApp1
         /// </summary>
         private void DataReload()
         {
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (s, e) =>
             {
                 try
                 {
                     //读取PLC工序步骤状态
-                    //var sta = (ushort)plc.Read(service.GetStaStr(config.StationNo));
-                    //ModifyStep(sta, config.GWNo);
+
                     var sta = splc.ReadUInt16(service.GetStaStr(config.StationNo));
                     if (sta.IsSuccess)
                     {
                         ModifyStep(sta.Content, config.GWNo);
                         // log.Debug(sta.Content);
+                        if (sta.Content == 100) //PC 处理扫码
+                        {
+                            this.PortConnection();
+                        }
+                        else
+                        {
+                            this.PortClose();
+                        }
                     }
                     else
                     {
                         throw new Exception("工序步骤状态读取失败");
                     }
 
-                    //型号获取  ushort 0405,int 0406
-                    //var type = (ushort)plc.Read(service.GetTypeStr(config.ProductNo));
-                    //switch (type)
+
+                    //var type = splc.ReadUInt16(service.GetTypeStr(config.ProductNo));
+                    //if (type.IsSuccess)
                     //{
-                    //    case 1:
-                    //        XingHao.Text = "正驾";
-                    //        break;
-                    //    case 2:
-                    //        XingHao.Text = "副驾";
-                    //        break;
-                    //    default: break;
+                    //    switch (type.Content)
+                    //    {
+                    //        case 1:
+                    //            XingHao.Text = "正驾";
+                    //            break;
+                    //        case 2:
+                    //            XingHao.Text = "副驾";
+                    //            break;
+                    //        default: break;
+                    //    }
                     //}
-                    var type = splc.ReadUInt16(service.GetTypeStr(config.ProductNo));
-                    if (type.IsSuccess)
-                    {
-                        switch (type.Content)
-                        {
-                            case 1:
-                                XingHao.Text = "正驾";
-                                break;
-                            case 2:
-                                XingHao.Text = "副驾";
-                                break;
-                            default: break;
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("型号读取失败");
-                    }
+                    //else
+                    //{
+                    //    throw new Exception("型号读取失败");
+                    //}
 
                     if (config.GWNo == 20 || config.GWNo == 40) //旧工位适用
                     {
@@ -323,63 +302,63 @@ namespace WpfApp1
                     }
                     else //新工位（405,406）
                     {
-                        #region New BarCodeGet
-                        int startAddr = service.GetNewBarCodeStr(config.GWNo);
-                        Barcode1.Text = "";
-                        Barcode2.Text = "";
-                        Barcode3.Text = "";
-                        Barcode4.Text = "";
-                        BarYz.Text = "";
-                        for (int i = 1; i <= 4; i++)
-                        {
-                            if (i != 1)
-                            {
-                                startAddr += 72;
-                            }
-                            string tStr = "DB2000." + startAddr;
+                        #region New BarCodeGet cancel
+                        //int startAddr = service.GetNewBarCodeStr(config.GWNo);
+                        //Barcode1.Text = "";
+                        //Barcode2.Text = "";
+                        //Barcode3.Text = "";
+                        //Barcode4.Text = "";
+                        //BarYz.Text = "";
+                        //for (int i = 1; i <= 4; i++)
+                        //{
+                        //    if (i != 1)
+                        //    {
+                        //        startAddr += 72;
+                        //    }
+                        //    string tStr = "DB2000." + startAddr;
 
-                            //var temp = (string)plc.Read(DataType.DataBlock, 2000, startAddr, VarType.String, config.BarLengh);
-                            //temp = temp.Trim();
-                            string temp = null;
-                            var tempS = splc.ReadString(tStr, config.BarLengh);
-                            if (tempS.IsSuccess)
-                            {
-                                temp = tempS.Content.Replace("\0", "").Trim();
-                                if (temp.Length > 1)
-                                {
-                                    temp = temp.Substring(1, temp.Length - 1);
-                                }
-                                else
-                                {
-                                    temp = null;
-                                }
+                        //    //var temp = (string)plc.Read(DataType.DataBlock, 2000, startAddr, VarType.String, config.BarLengh);
+                        //    //temp = temp.Trim();
+                        //    string temp = null;
+                        //    var tempS = splc.ReadString(tStr, config.BarLengh);
+                        //    if (tempS.IsSuccess)
+                        //    {
+                        //        temp = tempS.Content.Replace("\0", "").Trim();
+                        //        if (temp.Length > 1)
+                        //        {
+                        //            temp = temp.Substring(1, temp.Length - 1);
+                        //        }
+                        //        else
+                        //        {
+                        //            temp = null;
+                        //        }
 
-                            }
-                            else
-                            {
-                                throw new Exception("条码读取失败！");
-                            }
+                        //    }
+                        //    else
+                        //    {
+                        //        throw new Exception("条码读取失败！");
+                        //    }
 
-                            if (!temp.IsNullOrEmpty())
-                            {
-                                switch (i)
-                                {
-                                    case 1:
-                                        Barcode1.Text = temp;
-                                        break;
-                                    case 2:
-                                        Barcode2.Text = temp;
-                                        break;
-                                    case 3:
-                                        Barcode3.Text = temp;
-                                        break;
-                                    case 4:
-                                        Barcode4.Text = temp;
-                                        break;
-                                }
-                                BarYz.Text = "比对成功";
-                            }
-                        }
+                        //    if (!temp.IsNullOrEmpty())
+                        //    {
+                        //        switch (i)
+                        //        {
+                        //            case 1:
+                        //                Barcode1.Text = temp;
+                        //                break;
+                        //            case 2:
+                        //                Barcode2.Text = temp;
+                        //                break;
+                        //            case 3:
+                        //                Barcode3.Text = temp;
+                        //                break;
+                        //            case 4:
+                        //                Barcode4.Text = temp;
+                        //                break;
+                        //        }
+                        //        BarYz.Text = "比对成功";
+                        //    }
+                        //}
                         #endregion
                     }
 
@@ -391,11 +370,6 @@ namespace WpfApp1
                         {
                             var i1 = i + config.GunNo - 1;
                             GunStr = service.GetGunStr(i1);
-                            //var torque1 = ((uint)plc.Read(GunStr.TorqueStr)).ConvertToDouble();
-                            //torque1 = double.Parse(torque1.ToString("F2"));
-                            //var angle1 = ((uint)plc.Read(GunStr.AngleStr)).ConvertToDouble();
-                            //angle1 = double.Parse(angle1.ToString("F2"));
-                            //var result1 = (bool)plc.Read(GunStr.ResultStr);
                             double torque1 = 0;
                             double angle1 = 0;
                             bool result1 = false;
@@ -457,6 +431,44 @@ namespace WpfApp1
                         }
                     }
                     #endregion
+
+                    // 读取保存信号
+                    var saveSingal = splc.ReadBool("");
+                    if (saveSingal.IsSuccess)
+                    {
+                        if (saveSingal.Content)
+                        {
+                            if (!saveMark)
+                            {
+                                string process = "";
+                                switch (config.GWNo)
+                                {
+                                    case 04052:
+                                        process = "上部框架装配";
+                                        break;
+                                    case 04053:
+                                        process = "上部框架卡圈压装";
+                                        break;
+                                    case 04061:
+                                        process = "滑轨马达组件装配";
+                                        break;
+                                    case 04063:
+                                        process = "下横梁卡圈压装";
+                                        break;
+                                }
+                                var save = dal.SaveInfo(product.FInterID, process, barList, ReList);
+                                if (save)
+                                {
+                                    splc.Write("", true);
+                                    saveMark = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            saveMark = false;
+                        }
+                    }
 
                     //报警信息
                     var info = splc.ReadUInt16(service.GetErrorStr(config.StationNo));
@@ -789,7 +801,7 @@ namespace WpfApp1
                         Barcode3.Text = "";
                         Barcode4.Text = "";
                     }
-                    else if (type == 100 || type == 110 || type == 300) 
+                    else if (type == 100 || type == 110 || type == 300)
                     {
                         l.ForEach(f =>
                         {
@@ -1151,6 +1163,9 @@ namespace WpfApp1
             {
                 splc.ConnectClose();
             }
+            if (dispatcherTimer.IsEnabled)
+                dispatcherTimer.Stop();
+
             log.Info("PLC Disconnected!");
         }
 
@@ -1171,6 +1186,190 @@ namespace WpfApp1
             {
                 PLCImage.Source = IFalse;
                 //log.Info("PLC Not Connected!");
+            }
+        }
+
+        private void Config_Click(object sender, RoutedEventArgs e)
+        {
+
+            ConfigWindow w = new ConfigWindow(config);
+            w.productHandler += new ConfigWindow.ProductHandler(ChildWin_Form);
+            w.Show();
+            w.Activate();
+        }
+
+        private void ChildWin_Form(object sender, ProductConfig pro)
+        {
+            yzList.Clear();
+            this.product = pro;
+            ZongType.Text = pro.FZCType;
+            switch (pro.FXingHao)
+            {
+                case 1:
+                    XingHao.Text = "正驾";
+                    break;
+                case 2:
+                    XingHao.Text = "副驾";
+                    break;
+            }
+            BarRule.Text = pro.FCodeRule;
+            yzList.Add(pro.FCodeRule);
+            if (pro.FStatus1 == 1)
+            {
+                yzList.Add(pro.FCodeRule1);
+                BarRule.Text += "\r\n" + pro.FCodeRule1;
+            }
+            if (pro.FStatus2 == 1)
+            {
+                yzList.Add(pro.FCodeRule2);
+                BarRule.Text += "\r\n" + pro.FCodeRule2;
+            }
+            if (pro.FStatus3 == 1)
+            {
+                yzList.Add(pro.FCodeRule3);
+                BarRule.Text += "\r\n" + pro.FCodeRule3;
+            }
+
+            if (dispatcherTimer.IsEnabled)
+                dispatcherTimer.Stop();
+            remark = false;
+
+            // write plc data
+            string address = null;
+            switch (config.GWNo)
+            {
+                case 04052:
+                    break;
+                case 04053:
+                    break;
+                case 04061:
+                    break;
+                case 04063:
+                    break;
+            }
+            //splc.Write(address, pro.FPLC);
+
+            #region PLC连接定时器
+            timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Tick += new EventHandler(ThreadCheck);
+            timer.Interval = new TimeSpan(0, 0, 0, 5);
+            timer.Start();
+            #endregion
+        }
+
+        private bool PortConnection()
+        {
+            bool mark = false;
+            if (serialPort == null)
+            {
+                barList.Clear();
+                barCount = 0;
+                serialPort = new SerialPort(config.PortName, config.BaudRate, Parity.None, 8, StopBits.One);
+                serialPort.DtrEnable = true;
+                serialPort.RtsEnable = true;
+                serialPort.ReadTimeout = 100;
+                serialPort.DataReceived += serialPort_DataReceived;
+                mark = OpenPort();
+            }
+            return mark;
+        }
+
+        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            try
+            {
+                var serialPort = (SerialPort)sender;
+                //开启接收数据线程
+                Thread threadReceiveSub = new Thread(new ParameterizedThreadStart(ReceiveData));
+                threadReceiveSub.Start(serialPort);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
+        }
+
+        private void ReceiveData(object serialPortobj)
+        {
+            try
+            {
+                SerialPort serialPort = (SerialPort)serialPortobj;
+
+                //防止数据接收不完整 线程sleep(100)
+                Thread.Sleep(100);
+
+                string str = serialPort.ReadExisting();
+
+                if (str == string.Empty)
+                {
+                    return;
+                }
+                else
+                {
+                    BarCodeMatch(str);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
+        }
+
+        private void BarCodeMatch(string barcode)
+        {
+            // 防错
+            var fc = yzList.FindIndex(f => barcode.Contains(f));
+            if (fc != -1)
+            {
+                barList.Add(barcode);
+                barCount += 1;
+                
+            }
+
+            //上工序 ??
+
+            if (barCount == product.FCodeSum)
+            {
+                // write plc ???
+                splc.Write("",1);
+            }
+
+            Dispatcher.InvokeAsync(() =>
+            {
+                Barcode1.Text = barcode;
+
+                BarYz.Text = fc != -1 ? "OK" : "NG";
+            });
+        }
+
+        private bool OpenPort()
+        {
+            string message = null;
+            try//这里写成异常处理的形式以免串口打不开程序崩溃
+            {
+                serialPort.Open();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+            }
+            if (serialPort.IsOpen)
+            {
+                log.Info("连接成功！");
+                return true;
+            }
+            else
+            {
+                log.Error("打开失败!原因为： " + message);
+                return false;
+            }
+        }
+
+        private void PortClose()
+        {
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                serialPort.Close();
             }
         }
     }

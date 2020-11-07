@@ -66,6 +66,9 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="HslCommunication, Version=6.2.5.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
       <HintPath>..\packages\HslCommunication.6.2.5\lib\net35\HslCommunication.dll</HintPath>
     </Reference>
@@ -106,14 +109,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\SQLHelper.cs" />
+    <Compile Include="ConfigWindow.xaml.cs">
+      <DependentUpon>ConfigWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\MainDAL.cs" />
     <Compile Include="Entity\BarCodeStr.cs" />
     <Compile Include="Entity\GDbData.cs" />
     <Compile Include="Entity\GDbStr.cs" />
     <Compile Include="Entity\GongXuModel.cs" />
     <Compile Include="Entity\InfoData.cs" />
+    <Compile Include="Entity\ProductConfig.cs" />
     <Compile Include="Entity\StationData.cs" />
     <Compile Include="Entity\ConfigData.cs" />
     <Compile Include="Services\GetInfoService.cs" />
+    <Page Include="ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

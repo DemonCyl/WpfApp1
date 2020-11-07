@@ -3,17 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp1"
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="MainWindow" Height="470" Width="800">
-    <Grid Background="SteelBlue">
+        Title="主界面" Height="470" Width="800">
 
+    <Grid Background="SteelBlue">
         <Viewbox VerticalAlignment="Top" >
             <Canvas x:Name="Canvas1" Width="840" Height=" 470">
-                <Canvas x:Name="imageCanvas" Width="505" Height="268"  Canvas.Left="335" Canvas.Top="59">
-                    <Image x:Name="pImage" Width="505" Height="268" Stretch="Fill"/>
+                <Menu x:Name="menu" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Background="SteelBlue" BorderThickness="0">
+                    <MenuItem Header="配置" FontSize="12" Foreground="#F0E68C" FontFamily="Microsoft Yahei" Click="Config_Click"/>
+                </Menu>
+                <Canvas x:Name="imageCanvas" Height="256" Width="505" Canvas.Top="72"  Canvas.Left="335" >
+                    <Image x:Name="pImage" Width="505" Height="256" Stretch="Fill"/>
                 </Canvas>
                 <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="28" Width="840" Canvas.Top="439">
                     <Border.BorderBrush>
@@ -22,20 +24,20 @@
                         </LinearGradientBrush>
                     </Border.BorderBrush>
                 </Border>
-                <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="59" Width="840">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="59" Width="840" Canvas.Top="15">
                     <Border.BorderBrush>
                         <LinearGradientBrush SpreadMethod="Repeat" StartPoint="0, 5" EndPoint="5, 0" MappingMode="Absolute">
                             <GradientStop Color="White" Offset="0"/>
                         </LinearGradientBrush>
                     </Border.BorderBrush>
                 </Border>
-                <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="268" Width="335" Canvas.Top="59">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="0" BorderThickness="2" Height="256" Width="335" Canvas.Top="72">
                     <Border.BorderBrush>
                         <LinearGradientBrush SpreadMethod="Repeat" StartPoint="0, 5" EndPoint="5, 0" MappingMode="Absolute">
                             <GradientStop Color="White" Offset="0"/>
                         </LinearGradientBrush>
                     </Border.BorderBrush>
-                    <ListView x:Name="listView" ItemsSource="{Binding .}"  Background="SteelBlue">
+                    <ListView x:Name="listView" ItemsSource="{Binding .}"  Background="SteelBlue"  >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Stretch" FlowDirection="LeftToRight">
@@ -49,9 +51,9 @@
                                     </Grid.ColumnDefinitions>
                                     <Image Source="{Binding Status}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="15" Height="13"/>
                                     <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" TextWrapping="Wrap"
-                                               Height="Auto" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"/>
+                                               Height="Auto" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="10"/>
                                     <TextBlock Text="{Binding sType}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Visibility="Hidden"
-                                               Height="Auto" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"/>
+                                               Height="Auto" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="10"/>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -64,8 +66,8 @@
                         </LinearGradientBrush>
                     </Border.BorderBrush>
                 </Border>
-                <TextBlock x:Name="TM" HorizontalAlignment="Left" Grid.Row="3" Foreground="#F0E68C" FontFamily="Microsoft Yahei"
-                           TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="33" Width="169" Canvas.Left="661" Canvas.Top="14"/>
+                <TextBlock x:Name="TM" HorizontalAlignment="Left" Grid.Row="3" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
+                           TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="33" Width="169" Canvas.Left="661" Canvas.Top="29"/>
                 <!--<ListView x:Name="listView" ItemsSource="{Binding .}" Canvas.Top="63" Height="264" Width="278" Background="#EE3BABFF" FontFamily="Microsoft Yahei" Canvas.Left="55" Foreground="White" >
                     <ListView.Resources>
                         <Style TargetType="{x:Type GridViewColumnHeader}" >
@@ -160,25 +162,25 @@
                 <Label Canvas.Top="404" Content="当前数据:" FontSize="10" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="10"/>
                 <Label Canvas.Left="131" Canvas.Top="332" Content="条码:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
                 <Label Canvas.Left="335" Canvas.Top="328" Content="条码规则:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
-                <Label Canvas.Left="335" Canvas.Top="376" Content="条码验证:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
+                <Label Canvas.Left="335" Canvas.Top="412" Content="条码验证:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
 
                 <!--当前计划编号:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="当前计划编号:" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="8"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="当前计划编号:" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="23"/>
                 <!--计划设定时间:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="计划设定时间:" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="31"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="计划设定时间:" FontFamily="Microsoft Yahei" Canvas.Left="143" Canvas.Top="46"/>
                 <!--计划总数:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="计划总数:" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="8"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="计划总数:" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="23"/>
                 <!--当前产量:-->
-                <Label FontSize="10" Foreground="#F0E68C" Content="当前产量:" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="31"/>
+                <Label FontSize="10" Foreground="#F0E68C" Content="当前产量:" FontFamily="Microsoft Yahei" Canvas.Left="380" Canvas.Top="46"/>
 
                 <TextBlock x:Name="PlanNo" HorizontalAlignment="Left" Grid.Row="3" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
-                           TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="154" Canvas.Left="221" Canvas.Top="12"/>
+                           TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="154" Canvas.Left="221" Canvas.Top="27"/>
                 <TextBlock x:Name="PlanTime"  HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="154" Canvas.Left="221" Canvas.Top="36"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="154" Canvas.Left="221" Canvas.Top="51"/>
                 <TextBlock x:Name="PlanSum" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="83" Canvas.Left="433" Canvas.Top="12"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="83" Canvas.Left="433" Canvas.Top="27"/>
                 <TextBlock x:Name="Output" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="83" Canvas.Left="433" Canvas.Top="36"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="83" Canvas.Left="433" Canvas.Top="51"/>
                 <TextBlock x:Name="ZongType" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="200" Canvas.Left="17" Canvas.Top="353"/>
                 <TextBlock x:Name="XingHao" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
@@ -188,9 +190,9 @@
                 <TextBlock x:Name="Barcode1" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="336"/>
                 <TextBlock x:Name="BarRule" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="28" Width="129" Canvas.Left="351" Canvas.Top="348"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="62" Width="129" Canvas.Left="351" Canvas.Top="348"/>
                 <TextBlock x:Name="BarYz" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="28" Width="129" Canvas.Left="351" Canvas.Top="395"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="15" Width="47" Canvas.Left="392" Canvas.Top="416"/>
                 <TextBlock x:Name="Step1" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="243" Canvas.Left="47" Canvas.Top="64"/>
                 <TextBlock x:Name="Step2" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
@@ -228,12 +230,12 @@
                 <Image x:Name="StepImage10" Width="15" Height="13" Canvas.Left="18" Canvas.Top="226"/>
                 <Image x:Name="StepImage11" Width="15" Height="13" Canvas.Left="18" Canvas.Top="244"/>
                 <Image x:Name="StepImage12" Width="15" Height="13" Canvas.Left="18" Canvas.Top="262"/>
-                <Canvas Width="126" Height="50"  Canvas.Left="5" Canvas.Top="4" Background="White">
-                    <Image x:Name="Logo" Width="126" Height="50"  />
+                <Canvas Width="126" Height="50"  Canvas.Left="5" Canvas.Top="19" Background="White">
+                    <Image x:Name="Logo" Width="126" Height="50" />
                 </Canvas>
-                <TextBlock x:Name="PLCSta" HorizontalAlignment="Center" Foreground="#F0E68C" FontFamily="Microsoft Yahei"
-                    TextWrapping="Wrap" Text="PLC状态" VerticalAlignment="Center" Height="16" Width="53" Canvas.Left="556" Canvas.Top="12"/>
-                <Image x:Name="PLCImage" Width="15" Height="13" Canvas.Left="579" Canvas.Top="33"/>
+                <TextBlock x:Name="PLCSta" HorizontalAlignment="Center" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="10"
+                    TextWrapping="Wrap" Text="PLC状态" VerticalAlignment="Center" Height="16" Width="38" Canvas.Left="569" Canvas.Top="27"/>
+                <Image x:Name="PLCImage" Width="15" Height="13" Canvas.Left="579" Canvas.Top="48"/>
                 <TextBlock x:Name="Barcode2" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="376"/>
                 <TextBlock x:Name="Barcode3" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
