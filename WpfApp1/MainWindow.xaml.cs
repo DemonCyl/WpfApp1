@@ -39,6 +39,7 @@ namespace WpfApp1
         private OperateResult connect;
         private GDbStr GunStr;
         private int markN = 0;
+        private bool IsOn = false;
         private int barCount = 0;
         private bool remark = false;
         private bool saveMark = false;
@@ -184,20 +185,29 @@ namespace WpfApp1
             {
                 try
                 {
-                    //读取PLC工序步骤状态
+                    //读取在线 离线
+                    var IsOnMark = splc.ReadBool("DB25.182.6");
+                    if (IsOnMark.IsSuccess)
+                    {
+                        IsOn = IsOnMark.Content;
+                    }
 
+                    //读取PLC工序步骤状态
                     var sta = splc.ReadUInt16(service.GetStaStr(config.StationNo));
                     if (sta.IsSuccess)
                     {
                         ModifyStep(sta.Content, config.GWNo);
                         // log.Debug(sta.Content);
-                        if (sta.Content == 100) //PC 处理扫码
+                        if (IsOn)
                         {
-                            this.PortConnection();
-                        }
-                        else
-                        {
-                            this.PortClose();
+                            if (sta.Content == 110) //PC 处理扫码
+                            {
+                                this.PortConnection();
+                            }
+                            else
+                            {
+                                this.PortClose();
+                            }
                         }
                     }
                     else
@@ -373,7 +383,7 @@ namespace WpfApp1
                             double torque1 = 0;
                             double angle1 = 0;
                             bool result1 = false;
-                            var t = splc.ReadDouble(GunStr.TorqueStr);
+                            var t = splc.ReadFloat(GunStr.TorqueStr);
                             var a = splc.ReadDouble(GunStr.AngleStr);
                             var r = splc.ReadBool(GunStr.ResultStr);
                             if (t.IsSuccess)
@@ -433,42 +443,42 @@ namespace WpfApp1
                     #endregion
 
                     // 读取保存信号
-                    var saveSingal = splc.ReadBool("");
-                    if (saveSingal.IsSuccess)
-                    {
-                        if (saveSingal.Content)
-                        {
-                            if (!saveMark)
-                            {
-                                string process = "";
-                                switch (config.GWNo)
-                                {
-                                    case 04052:
-                                        process = "上部框架装配";
-                                        break;
-                                    case 04053:
-                                        process = "上部框架卡圈压装";
-                                        break;
-                                    case 04061:
-                                        process = "滑轨马达组件装配";
-                                        break;
-                                    case 04063:
-                                        process = "下横梁卡圈压装";
-                                        break;
-                                }
-                                var save = dal.SaveInfo(product.FInterID, process, barList, ReList);
-                                if (save)
-                                {
-                                    splc.Write("", true);
-                                    saveMark = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            saveMark = false;
-                        }
-                    }
+                    //var saveSingal = splc.ReadBool(service.GetReadSaveStr(config.GWNo));
+                    //if (saveSingal.IsSuccess)
+                    //{
+                    //    if (saveSingal.Content)
+                    //    {
+                    //        if (!saveMark)
+                    //        {
+                    //            string process = "";
+                    //            switch (config.GWNo)
+                    //            {
+                    //                case 04052:
+                    //                    process = "上部框架装配";
+                    //                    break;
+                    //                case 04053:
+                    //                    process = "上部框架卡圈压装";
+                    //                    break;
+                    //                case 04061:
+                    //                    process = "滑轨马达组件装配";
+                    //                    break;
+                    //                case 04063:
+                    //                    process = "下横梁卡圈压装";
+                    //                    break;
+                    //            }
+                    //            var save = dal.SaveInfo(product.FInterID, process, barList, ReList);
+                    //            if (save)
+                    //            {
+                    //                splc.Write(service.GetWriteSaveStr(config.GWNo), true);
+                    //                saveMark = true;
+                    //            }
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        saveMark = false;
+                    //    }
+                    //}
 
                     //报警信息
                     var info = splc.ReadUInt16(service.GetErrorStr(config.StationNo));
@@ -801,7 +811,7 @@ namespace WpfApp1
                         Barcode3.Text = "";
                         Barcode4.Text = "";
                     }
-                    else if (type == 100 || type == 110 || type == 300)
+                    else if (type == 100 || type == 110)
                     {
                         l.ForEach(f =>
                         {
@@ -893,7 +903,7 @@ namespace WpfApp1
                         Barcode3.Text = "";
                         Barcode4.Text = "";
                     }
-                    else if (type == 100 || type == 110 || type == 300)
+                    else if (type == 100 || type == 110)
                     {
                         l.ForEach(f =>
                         {
@@ -970,7 +980,7 @@ namespace WpfApp1
                         Barcode3.Text = "";
                         Barcode4.Text = "";
                     }
-                    else if (type == 100 || type == 110 || type == 300)
+                    else if (type == 100 || type == 110 )
                     {
                         l.ForEach(f =>
                         {
@@ -1063,7 +1073,7 @@ namespace WpfApp1
                         Barcode3.Text = "";
                         Barcode4.Text = "";
                     }
-                    else if (type == 100 || type == 110 || type == 300)
+                    else if (type == 100 || type == 110)
                     {
                         l.ForEach(f =>
                         {
@@ -1323,15 +1333,15 @@ namespace WpfApp1
             {
                 barList.Add(barcode);
                 barCount += 1;
-                
+
             }
 
             //上工序 ??
 
             if (barCount == product.FCodeSum)
             {
-                // write plc ???
-                splc.Write("",1);
+                // write plc ???  2:OK
+                splc.Write(service.GetSaoMaStr(config.GWNo),2);
             }
 
             Dispatcher.InvokeAsync(() =>

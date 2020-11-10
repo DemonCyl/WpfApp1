@@ -205,5 +205,68 @@ namespace WpfApp1.Services
             }
             return conn;
         }
+
+        public string GetSaoMaStr(int GWNo)
+        {
+            string conn = null;
+            switch (GWNo)
+            {
+                case 04052:
+                    conn = "DB4000.1018";
+                    break;
+                case 04053:
+                    conn = "DB4000.1332";
+                    break;
+                case 04061:
+                    conn = "";
+                    break;
+                case 04063:
+                    conn = "DB4000.1762";
+                    break;
+            }
+            return conn;
+        }
+
+        public string GetReadSaveStr(int GWNo)
+        {
+            string conn = null;
+            switch (GWNo)
+            {
+                case 04052:
+                    conn = "DB4000.1017";
+                    break;
+                case 04053:
+                    conn = "DB4000.1332";
+                    break;
+                case 04061:
+                    conn = "";
+                    break;
+                case 04063:
+                    conn = "DB4000.1762";
+                    break;
+            }
+            return conn;
+        }
+
+        public string GetWriteSaveStr(int GWNo)
+        {
+            string conn = null;
+            switch (GWNo)
+            {
+                case 04052:
+                    conn = "DB4000.1019";
+                    break;
+                case 04053:
+                    conn = "DB4000.1332";
+                    break;
+                case 04061:
+                    conn = "";
+                    break;
+                case 04063:
+                    conn = "DB4000.1762";
+                    break;
+            }
+            return conn;
+        }
     }
 }
