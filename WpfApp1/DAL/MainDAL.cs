@@ -147,6 +147,7 @@ namespace WpfApp1.DAL
                 }
                 catch (Exception ex)
                 {
+                    
                     tran.Rollback();
                     return false;
                 }

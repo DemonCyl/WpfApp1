@@ -247,6 +247,8 @@
                 <Label FontSize="12" Foreground="#F0E68C" Content="报警:" FontFamily="Microsoft Yahei" Canvas.Left="13" Canvas.Top="441"/>
                 <TextBlock x:Name="ErrorInfo" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="12"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="768" Canvas.Left="62" Canvas.Top="444"/>
+                <TextBlock x:Name="IsOnline" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Center" Height="13" Width="28" Canvas.Left="812"/>
                 <!--<ListView x:Name="listView_Copy" ItemsSource="{Binding .}" Canvas.Top="64" Height="264" Width="40" Background="#EE3BABFF" FontFamily="Microsoft Yahei" Canvas.Left="10" Foreground="White" >
                     <ListView.Resources>
                         <Style TargetType="{x:Type GridViewColumnHeader}" >
