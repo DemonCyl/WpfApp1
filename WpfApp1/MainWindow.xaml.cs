@@ -1206,7 +1206,8 @@ namespace WpfApp1
 
             ConfigWindow w = new ConfigWindow(config);
             w.productHandler += new ConfigWindow.ProductHandler(ChildWin_Form);
-            w.Show();
+            w.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            w.ShowDialog();
             w.Activate();
         }
 

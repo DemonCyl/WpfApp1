@@ -305,7 +305,7 @@ namespace WpfApp1
 
             productHandler(this, pro);
 
-            //this.Close();
+            this.Close();
         }
     }
 }
