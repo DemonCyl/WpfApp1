@@ -109,12 +109,12 @@ namespace WpfApp1
 
                 connect = splc.ConnectServer();
 
-                InitGw();
+                //InitGw();
                 #region PLC连接定时器
-                timer = new System.Windows.Threading.DispatcherTimer();
-                timer.Tick += new EventHandler(ThreadCheck);
-                timer.Interval = new TimeSpan(0, 0, 0, 5);
-                timer.Start();
+                //timer = new System.Windows.Threading.DispatcherTimer();
+                //timer.Tick += new EventHandler(ThreadCheck);
+                //timer.Interval = new TimeSpan(0, 0, 0, 5);
+                //timer.Start();
                 #endregion
 
                 ListViewAutomationPeer lvap = new ListViewAutomationPeer(listView);
@@ -241,26 +241,6 @@ namespace WpfApp1
                     {
                         throw new Exception("工序步骤状态读取失败");
                     }
-
-
-                    //var type = splc.ReadUInt16(service.GetTypeStr(config.ProductNo));
-                    //if (type.IsSuccess)
-                    //{
-                    //    switch (type.Content)
-                    //    {
-                    //        case 1:
-                    //            XingHao.Text = "正驾";
-                    //            break;
-                    //        case 2:
-                    //            XingHao.Text = "副驾";
-                    //            break;
-                    //        default: break;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    throw new Exception("型号读取失败");
-                    //}
 
                     if (config.GWNo == 20 || config.GWNo == 40) //旧工位适用
                     {
@@ -479,7 +459,6 @@ namespace WpfApp1
                             {
                                 if (!saveMark)
                                 {
-
                                     var save = dal.SaveInfo(product.FInterID, process, barList, ReList);
                                     if (save)
                                     {
@@ -1478,15 +1457,31 @@ namespace WpfApp1
                 }
             }
 
-            //上工序 判断
+            //上工序 判断 04061为起始工位，无需判断 
+            long fid = 0;
             switch (config.GWNo)
             {
                 case 04052:
+                    // 判断 上部框架预装
+                    fid = dal.QueryBefore("上部框架预装", barcode);
                     break;
                 case 04053:
+                    // 判断 上部框架装配
+                    fid = dal.QueryBefore("上部框架装配", barcode);
                     break;
                 case 04063:
+                    // 判断 滑轨马达组件装配
+                    fid = dal.QueryBefore("滑轨马达组件装配", barcode);
                     break;
+            }
+            if (fid > 0)
+            {
+                var beforeBarList = dal.GetBarCodeList(fid);
+                if (beforeBarList != null && beforeBarList.Any())
+                {
+                    barList.AddRange(beforeBarList);
+                }
+                barCount += 1;
             }
 
             if (barCount == product.FCodeSum)
