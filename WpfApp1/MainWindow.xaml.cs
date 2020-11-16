@@ -44,6 +44,7 @@ namespace WpfApp1
         private GDbStr GunStr;
         private int markN = 0;
         private bool IsOn = false;
+        private bool IsWrite = false;
         private int barCount = 0;
         private bool remark = false;
         private bool saveMark = false;
@@ -109,7 +110,8 @@ namespace WpfApp1
 
                 connect = splc.ConnectServer();
 
-                //InitGw();
+                InitGw();
+
                 #region PLC连接定时器
                 //timer = new System.Windows.Threading.DispatcherTimer();
                 //timer.Tick += new EventHandler(ThreadCheck);
@@ -467,6 +469,7 @@ namespace WpfApp1
                                         barList.Clear();
                                         elist.Clear();
                                         barCount = 0;
+                                        IsWrite = false;
                                     }
                                 }
                             }
@@ -804,6 +807,7 @@ namespace WpfApp1
                         barList.Clear();
                         elist.Clear();
                         barCount = 0;
+                        IsWrite = false;
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -904,6 +908,7 @@ namespace WpfApp1
                         barList.Clear();
                         barCount = 0;
                         elist.Clear();
+                        IsWrite = false;
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -989,6 +994,7 @@ namespace WpfApp1
                         barList.Clear();
                         barCount = 0;
                         elist.Clear();
+                        IsWrite = false;
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -1090,7 +1096,7 @@ namespace WpfApp1
                         barList.Clear();
                         barCount = 0;
                         elist.Clear();
-
+                        IsWrite = false;
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -1326,21 +1332,25 @@ namespace WpfApp1
                     break;
             }
             BarRule.Text = pro.FCodeRule;
-            yzList.Add(pro.FCodeRule);
+            if (pro.FCodeRule != string.Empty)
+                yzList.Add(pro.FCodeRule);
             if (pro.FStatus1 == 1)
             {
-                yzList.Add(pro.FCodeRule1);
                 BarRule.Text += "\r\n" + pro.FCodeRule1;
+                if (pro.FCodeRule1 != string.Empty)
+                    yzList.Add(pro.FCodeRule1);
             }
             if (pro.FStatus2 == 1)
             {
-                yzList.Add(pro.FCodeRule2);
                 BarRule.Text += "\r\n" + pro.FCodeRule2;
+                if (pro.FCodeRule2 != string.Empty)
+                    yzList.Add(pro.FCodeRule2);
             }
             if (pro.FStatus3 == 1)
             {
-                yzList.Add(pro.FCodeRule3);
                 BarRule.Text += "\r\n" + pro.FCodeRule3;
+                if (pro.FCodeRule3 != string.Empty)
+                    yzList.Add(pro.FCodeRule3);
             }
 
             if (dispatcherTimer.IsEnabled)
@@ -1382,6 +1392,7 @@ namespace WpfApp1
                 barList.Clear();
                 //elist.Clear();
                 barCount = 0;
+                IsWrite = false;
                 serialPort = new SerialPort(config.PortName, config.BaudRate, Parity.None, 8, StopBits.One);
                 serialPort.DtrEnable = true;
                 serialPort.RtsEnable = true;
@@ -1437,23 +1448,27 @@ namespace WpfApp1
 
         private void BarCodeMatch(string barcode)
         {
-            // 防错
-            var fc = yzList.Find(f => barcode.Contains(f));
-            //log.Info(barcode);
-            //log.Info(fc);
-            if (fc != null)
+            string fc = null;
+            if (yzList.Any())
             {
-                if (elist.FindIndex(f => f.Equals(fc)) != -1)
+                // 防错
+                fc = yzList.Find(f => barcode.Contains(f));
+                //log.Info(barcode);
+                //log.Info(fc);
+                if (fc != null)
                 {
-                    barList.Remove(barList.Find(bar => bar.Contains(fc)));
+                    if (elist.FindIndex(f => f.Equals(fc)) != -1)
+                    {
+                        barList.Remove(barList.Find(bar => bar.Contains(fc)));
 
-                    barList.Add(barcode);
-                }
-                else
-                {
-                    elist.Add(fc);
-                    barList.Add(barcode);
-                    barCount += 1;
+                        barList.Add(barcode);
+                    }
+                    else
+                    {
+                        elist.Add(fc);
+                        barList.Add(barcode);
+                        barCount += 1;
+                    }
                 }
             }
 
@@ -1470,8 +1485,8 @@ namespace WpfApp1
                     fid = dal.QueryBefore("上部框架装配", barcode);
                     break;
                 case 04063:
-                    // 判断 滑轨马达组件装配
-                    fid = dal.QueryBefore("滑轨马达组件装配", barcode);
+                    // 判断 H型滑轨装配
+                    fid = dal.QueryBefore("H型滑轨装配", barcode);
                     break;
             }
             if (fid > 0)
@@ -1484,10 +1499,11 @@ namespace WpfApp1
                 barCount += 1;
             }
 
-            if (barCount == product.FCodeSum)
+            if (barCount == product.FCodeSum && !IsWrite)
             {
                 // write plc ???  2:OK
                 splc.Write(service.GetSaoMaStr(config.GWNo), 2);
+                IsWrite = true;
             }
 
             Dispatcher.InvokeAsync(() =>
@@ -1546,7 +1562,7 @@ namespace WpfApp1
 
         private void Change_Click(object sender, RoutedEventArgs e)
         {
-            if (Gwlist.Any())
+            if (Gwlist != null && Gwlist.Any())
             {
 
                 listNo += 1;
