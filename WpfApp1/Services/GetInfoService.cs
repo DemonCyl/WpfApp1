@@ -218,7 +218,7 @@ namespace WpfApp1.Services
                     conn = "DB4000.1332";
                     break;
                 case 04061:
-                    conn = "";
+                    conn = "DB4000.504";
                     break;
                 case 04063:
                     conn = "DB4000.1762";
@@ -233,16 +233,16 @@ namespace WpfApp1.Services
             switch (GWNo)
             {
                 case 04052:
-                    conn = "DB4000.1017";
+                    conn = "DB4000.1336.0";
                     break;
                 case 04053:
-                    conn = "DB4000.1332";
+                    conn = "DB4000.1338.0";
                     break;
                 case 04061:
-                    conn = "";
+                    conn = "DB4000.1764.0";
                     break;
                 case 04063:
-                    conn = "DB4000.1762";
+                    conn = "DB4000.1768.0";
                     break;
             }
             return conn;
@@ -254,16 +254,16 @@ namespace WpfApp1.Services
             switch (GWNo)
             {
                 case 04052:
-                    conn = "DB4000.1019";
+                    conn = "DB4000.1336.1";
                     break;
                 case 04053:
-                    conn = "DB4000.1332";
+                    conn = "DB4000.1338.1";
                     break;
                 case 04061:
-                    conn = "";
+                    conn = "DB4000.1764.1";
                     break;
                 case 04063:
-                    conn = "DB4000.1762";
+                    conn = "DB4000.1768.1";
                     break;
             }
             return conn;

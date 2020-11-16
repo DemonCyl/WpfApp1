@@ -32,11 +32,36 @@ namespace WpfApp1
         private int mark = 0;
         public delegate void ProductHandler(object sender, ProductConfig product);
         public event ProductHandler productHandler;
+        private string process = "";
 
         public ConfigWindow(ConfigData data)
         {
             InitializeComponent();
             dal = new MainDAL(data);
+            switch (data.GWNo)
+            {
+                case 04052:
+                    process = "上部框架装配";
+                    break;
+                case 04053:
+                    process = "上部框架卡圈压装";
+                    break;
+                case 04061:
+                    process = "滑轨马达组件装配";
+                    break;
+                case 04063:
+                    process = "下横梁卡圈压装";
+                    break;
+            }
+
+            GWItems.Items.Add("上部框架装配");
+            GWItems.Items.Add("上部框架卡圈压装");
+            GWItems.Items.Add("滑轨马达组件装配");
+            GWItems.Items.Add("下横梁卡圈压装");
+            GWItems.Items.Add("前管装配");
+            GWItems.Items.Add("上部框架预装");
+            GWItems.Items.Add("H型滑轨装配");
+            GWItems.SelectedIndex = 0;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -59,12 +84,13 @@ namespace WpfApp1
                 info.FStatus2 = code2.IsChecked.Value ? 1 : 0;
                 info.FCodeRule3 = codeRule3.Text.Trim();
                 info.FStatus3 = code3.IsChecked.Value ? 1 : 0;
-                if (PLCItem.Text.Equals(""))
-                {
-                    Info.Text = "PLC通讯标识值不能为空!";
-                    return;
-                }
-                info.FPLC = int.Parse(PLCItem.Text.Trim());
+                //if (PLCItem.Text.Equals(""))
+                //{
+                //    Info.Text = "PLC通讯标识值不能为空!";
+                //    return;
+                //}
+                //info.FPLC = int.Parse(PLCItem.Text.Trim());
+                info.FGWItem = GWItems.SelectedItem.ToString();
                 int lrType = 0;
                 if (right.IsChecked.Value)
                     lrType = 1;
@@ -254,12 +280,13 @@ namespace WpfApp1
                         left.IsChecked = true;
                         break;
                 }
-                PLCItem.Text = pro.FPLC.ToString();
+                //PLCItem.Text = pro.FPLC.ToString();
                 CodeSum.Text = pro.FCodeSum.ToString();
                 codeRule.Text = pro.FCodeRule;
                 codeRule1.Text = pro.FCodeRule1;
                 codeRule2.Text = pro.FCodeRule2;
                 codeRule3.Text = pro.FCodeRule3;
+                GWItems.SelectedItem = pro.FGWItem;
                 switch (pro.FStatus1)
                 {
                     case 0:
@@ -302,6 +329,11 @@ namespace WpfApp1
 
             var item = ZCItems.SelectedItem.ToString();
             var pro = list.Find(f => f.FZCType == item);
+            if (!pro.FGWItem.Equals(process))
+            {
+                Info.Text = $"当前工位为{process},请选择正确的产品";
+                return;
+            }
 
             productHandler(this, pro);
 

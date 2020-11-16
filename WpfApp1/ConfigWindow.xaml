@@ -13,7 +13,7 @@
             <Canvas x:Name="Canvas1" Width="370" Height="450">
                 <Label Content="总成类别" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="1"/>
                 <Label Content="型号标识:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="54" Width="105" HorizontalContentAlignment="Right"/>
-                <Label Content="PLC通讯标识值:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="86" Width="105" HorizontalContentAlignment="Right"/>
+                <Label Content="PLC通讯标识值:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="273" Visibility="Hidden" Width="105" HorizontalContentAlignment="Right"/>
                 <Label Content="核心件规则:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="118" Width="105" HorizontalContentAlignment="Right"/>
                 <Label Content="条码规则1:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="150" Width="105" HorizontalContentAlignment="Right"/>
                 <Label Content="条码规则2:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="182" Width="105" HorizontalContentAlignment="Right"/>
@@ -22,8 +22,8 @@
                 <TextBox x:Name="NewZCItem"  Height="27" Width="323" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13" Visibility="Hidden"
                     pu:TextBoxHelper.FocusedShadowColor="#B5B5B5" pu:TextBoxHelper.CornerRadius="7" pu:TextBoxHelper.IsClearButtonVisible="True" Canvas.Left="24" Canvas.Top="28" />
 
-                <TextBox x:Name="PLCItem"  Height="27" Width="151" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13" InputMethod.IsInputMethodEnabled="False" PreviewTextInput="tb_PreviewTextInput"
-                    pu:TextBoxHelper.FocusedShadowColor="#B5B5B5" pu:TextBoxHelper.CornerRadius="7" pu:TextBoxHelper.IsClearButtonVisible="True" Canvas.Left="127" Canvas.Top="86" />
+                <TextBox x:Name="PLCItem" Visibility="Hidden" Height="27" Width="151" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13" InputMethod.IsInputMethodEnabled="False" PreviewTextInput="tb_PreviewTextInput"
+                    pu:TextBoxHelper.FocusedShadowColor="#B5B5B5" pu:TextBoxHelper.CornerRadius="7" pu:TextBoxHelper.IsClearButtonVisible="True" Canvas.Left="127" Canvas.Top="273" />
                 <TextBox x:Name="codeRule"  Height="27" Width="151" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13"
                     pu:TextBoxHelper.FocusedShadowColor="#B5B5B5" pu:TextBoxHelper.CornerRadius="7" pu:TextBoxHelper.IsClearButtonVisible="True" Canvas.Left="127" Canvas.Top="118" />
                 <TextBox x:Name="codeRule1"  Height="27" Width="151" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13" IsEnabled="False"
@@ -48,21 +48,24 @@
                     pu:CheckBoxHelper.CheckedContent="启用" Canvas.Left="290" Canvas.Top="214" Checked="code3_Checked" Unchecked="code3_Checked"/>
 
                 <Button  Height="31" Width="67" Content="保存" pu:ButtonHelper.ClickStyle="Sink" FontFamily="Microsoft Yahei" Background="White"  Foreground="Black"
-                    pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="55" Canvas.Top="290" Click="Save_Click" />
+                    pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="55" Canvas.Top="307" Click="Save_Click" />
                 <Button  Height="31" Width="67" Content="删除" pu:ButtonHelper.ClickStyle="Sink" FontFamily="Microsoft Yahei" Background="White"  Foreground="Black"
-                    pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="237" Canvas.Top="290" Click="Delete_Click" />
+                    pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="237" Canvas.Top="307" Click="Delete_Click" />
                 <Button  Height="25" Width="37" Content="查询" pu:ButtonHelper.ClickStyle="Sink" FontFamily="Microsoft Yahei" Background="White"  Foreground="Black"
                     pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="253" Click="Query_Click" />
                 <Button  Height="25" Width="37" Content="新增" pu:ButtonHelper.ClickStyle="Sink" FontFamily="Microsoft Yahei" Background="White"  Foreground="Black"
                     pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="310" Click="Add_Click"/>
                 <TextBox x:Name="IdText"  Height="20" Width="55" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13"
                     pu:TextBoxHelper.FocusedShadowColor="#B5B5B5" pu:TextBoxHelper.CornerRadius="7" Canvas.Left="24" Canvas.Top="6" Visibility="Hidden" />
-                <TextBlock x:Name="Info" Height="71" Canvas.Left="24" TextWrapping="Wrap" Text="" Canvas.Top="360" Width="323" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C"/>
+                <TextBlock x:Name="Info" Height="71" Canvas.Left="24" TextWrapping="Wrap" Text="" Canvas.Top="377" Width="323" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C"/>
                 <Button  Height="31" Width="89" Content="切换此产品" pu:ButtonHelper.ClickStyle="Sink" FontFamily="Microsoft Yahei" Background="White"  Foreground="Black"
-                    pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="215" Canvas.Top="326" Click="Change_Click" />
+                    pu:ButtonHelper.HoverBrush="#FF8900" pu:ButtonHelper.CornerRadius="7" Canvas.Left="215" Canvas.Top="343" Click="Change_Click" />
                 <Label Content="条码总数:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="246" Width="105" HorizontalContentAlignment="Right"/>
                 <TextBox x:Name="CodeSum"  Height="27" Width="62" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="0" FontFamily="Microsoft Yahei" FontSize="13" InputMethod.IsInputMethodEnabled="False" PreviewTextInput="tb_PreviewTextInput"
                     pu:TextBoxHelper.FocusedShadowColor="#B5B5B5" pu:TextBoxHelper.CornerRadius="7" pu:TextBoxHelper.IsClearButtonVisible="True" Canvas.Left="127" Canvas.Top="246" />
+                <Label Content="工位:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="86" Width="105" HorizontalContentAlignment="Right"/>
+                <ComboBox  Height="26" Width="151" pu:ComboBoxHelper.HoverBackground="#1EFFA000" pu:ComboBoxHelper.SelectedBackground="#32FFA000" x:Name="GWItems" Visibility="Visible" FontFamily="Microsoft Yahei"
+                    pu:ComboBoxHelper.CornerRadius="7" Canvas.Left="127" Canvas.Top="86"  />
             </Canvas>
         </Viewbox>
     </Grid>

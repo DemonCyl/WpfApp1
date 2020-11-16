@@ -10,6 +10,6 @@ namespace WpfApp1.Entity
     {
         public string ErrorInfo { get; set; }
 
-        public int Type { get; set; }
+        public string Address { get; set; }
     }
 }
