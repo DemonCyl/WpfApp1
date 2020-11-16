@@ -35,7 +35,7 @@ namespace WpfApp1.DAL
 
         public long QueryBefore(string gwItem,string barCode)
         {
-            string sql = $"select t.FInterID from ProcessInfo t left join ProcessInfoEntry1 t1 on t.FInterID = t1.FProcessInfoID where t.FProcess = '{gwItem}' and t1.FBarCode like '%{barCode}%'";
+            string sql = $"select t.FInterID from ProcessInfo t left join ProcessInfoEntry1 t1 on t.FInterID = t1.FProcessInfoID where t.FProcess = '{gwItem}' and t1.FBarCode = '{barCode}'";
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {

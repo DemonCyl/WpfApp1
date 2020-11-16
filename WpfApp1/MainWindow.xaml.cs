@@ -55,6 +55,7 @@ namespace WpfApp1
         private ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private List<GongXuModel> l = new List<GongXuModel>();
         private List<string> barList = new List<string>();
+        private List<string> beforeList = new List<string>();
         private List<string> yzList = new List<string>();
         private List<string> elist = new List<string>();
         private MainDAL dal;
@@ -470,6 +471,7 @@ namespace WpfApp1
                                         elist.Clear();
                                         barCount = 0;
                                         IsWrite = false;
+                                        beforeList.Clear();
                                     }
                                 }
                             }
@@ -799,15 +801,7 @@ namespace WpfApp1
                         {
                             f.Status = (f.sType == type ? ITrue : IFalse);
                         });
-                        Barcode1.Text = "";
-                        Barcode2.Text = "";
-                        Barcode3.Text = "";
-                        Barcode4.Text = "";
-                        BarYz.Text = "";
-                        barList.Clear();
-                        elist.Clear();
-                        barCount = 0;
-                        IsWrite = false;
+                        ClearInfo();
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -900,15 +894,7 @@ namespace WpfApp1
                         {
                             f.Status = (f.sType == type ? ITrue : IFalse);
                         });
-                        Barcode1.Text = "";
-                        Barcode2.Text = "";
-                        Barcode3.Text = "";
-                        Barcode4.Text = "";
-                        BarYz.Text = "";
-                        barList.Clear();
-                        barCount = 0;
-                        elist.Clear();
-                        IsWrite = false;
+                        ClearInfo();
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -986,15 +972,7 @@ namespace WpfApp1
                         {
                             f.Status = (f.sType == type ? ITrue : IFalse);
                         });
-                        Barcode1.Text = "";
-                        Barcode2.Text = "";
-                        Barcode3.Text = "";
-                        Barcode4.Text = "";
-                        BarYz.Text = "";
-                        barList.Clear();
-                        barCount = 0;
-                        elist.Clear();
-                        IsWrite = false;
+                        ClearInfo();
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -1088,15 +1066,7 @@ namespace WpfApp1
                         {
                             f.Status = (f.sType == type ? ITrue : IFalse);
                         });
-                        Barcode1.Text = "";
-                        Barcode2.Text = "";
-                        Barcode3.Text = "";
-                        Barcode4.Text = "";
-                        BarYz.Text = "";
-                        barList.Clear();
-                        barCount = 0;
-                        elist.Clear();
-                        IsWrite = false;
+                        ClearInfo();
                     }
                     else if (type == 100 || type == 110)
                     {
@@ -1220,7 +1190,7 @@ namespace WpfApp1
                     if (e1.IsSuccess && e1.Content)
                     {
                         //log.Debug(err.Address);
-                        
+
                         errMark = true;
                         Dispatcher.InvokeAsync(() =>
                         {
@@ -1449,7 +1419,7 @@ namespace WpfApp1
         private void BarCodeMatch(string barcode)
         {
             string fc = null;
-            if (yzList.Any())
+            if (yzList.Any() && !IsWrite)
             {
                 // 防错
                 fc = yzList.Find(f => barcode.Contains(f));
@@ -1489,20 +1459,25 @@ namespace WpfApp1
                     fid = dal.QueryBefore("H型滑轨装配", barcode);
                     break;
             }
-            if (fid > 0)
+            if (fid > 0 && !IsWrite)
             {
                 var beforeBarList = dal.GetBarCodeList(fid);
                 if (beforeBarList != null && beforeBarList.Any())
                 {
-                    barList.AddRange(beforeBarList);
+                    //barList.AddRange(beforeBarList);
+                    if (!beforeList.Exists(t => t == barcode))
+                    { 
+                        barCount += 1;
+                    }
+                    beforeList = beforeBarList;
                 }
-                barCount += 1;
             }
 
             if (barCount == product.FCodeSum && !IsWrite)
             {
                 // write plc ???  2:OK
                 splc.Write(service.GetSaoMaStr(config.GWNo), 2);
+                barList.AddRange(beforeList);
                 IsWrite = true;
             }
 
@@ -1578,6 +1553,20 @@ namespace WpfApp1
                     Start(p);
                 }
             }
+        }
+
+        private void ClearInfo()
+        {
+            Barcode1.Text = "";
+            Barcode2.Text = "";
+            Barcode3.Text = "";
+            Barcode4.Text = "";
+            BarYz.Text = "";
+            barList.Clear();
+            barCount = 0;
+            elist.Clear();
+            IsWrite = false;
+            beforeList.Clear();
         }
     }
 }
