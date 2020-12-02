@@ -114,10 +114,10 @@ namespace WpfApp1
                 InitGw();
 
                 #region PLC连接定时器
-                //timer = new System.Windows.Threading.DispatcherTimer();
-                //timer.Tick += new EventHandler(ThreadCheck);
-                //timer.Interval = new TimeSpan(0, 0, 0, 5);
-                //timer.Start();
+                timer = new System.Windows.Threading.DispatcherTimer();
+                timer.Tick += new EventHandler(ThreadCheck);
+                timer.Interval = new TimeSpan(0, 0, 0, 5);
+                timer.Start();
                 #endregion
 
                 ListViewAutomationPeer lvap = new ListViewAutomationPeer(listView);
@@ -384,6 +384,8 @@ namespace WpfApp1
 
                     #region 拧紧枪数据获取
                     ReList.Clear();
+                    DataList.ItemsSource = null;
+                    DataList.Items.Refresh();
                     if (config.GunCount > 0)
                     {
                         for (int i = 1; i <= config.GunCount; i++)
@@ -394,7 +396,7 @@ namespace WpfApp1
                             double angle1 = 0;
                             bool result1 = false;
                             var t = splc.ReadFloat(GunStr.TorqueStr);
-                            var a = splc.ReadDouble(GunStr.AngleStr);
+                            var a = splc.ReadFloat(GunStr.AngleStr);
                             var r = splc.ReadBool(GunStr.ResultStr);
                             if (t.IsSuccess)
                             {
@@ -444,7 +446,6 @@ namespace WpfApp1
                                 markN += 1;
                                 ReList.Add(new GDbData(i, torque1, angle1, rest));
                                 ReList.Sort((x, y) => -x.Num.CompareTo(y.Num));
-                                DataList.ItemsSource = null;
                                 DataList.ItemsSource = ReList;
                                 DataList.Items.Refresh();
                             }
@@ -838,8 +839,24 @@ namespace WpfApp1
                             {
                                 f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
                             }
+
+
                         });
+
+
                     }
+
+                    l.ForEach(f =>
+                    {
+                        if (f.sType <= type)
+                        {
+                            f.Status = ITrue;
+                        }
+                        else
+                        {
+                            f.Status = IFalse;
+                        }
+                    });
                     //switch (type)
                     //{
                     //    case 100:
@@ -912,8 +929,21 @@ namespace WpfApp1
                         l.ForEach(f =>
                         {
                             f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
+
+
                         });
                     }
+                    l.ForEach(f =>
+                    {
+                        if (f.sType <= type)
+                        {
+                            f.Status = ITrue;
+                        }
+                        else
+                        {
+                            f.Status = IFalse;
+                        }
+                    });
                     //switch (type)
                     //{
                     //    case 100:
@@ -1005,9 +1035,22 @@ namespace WpfApp1
                             {
                                 f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
                             }
+
+
                         });
                     }
 
+                    l.ForEach(f =>
+                    {
+                        if (f.sType <= type)
+                        {
+                            f.Status = ITrue;
+                        }
+                        else
+                        {
+                            f.Status = IFalse;
+                        }
+                    });
                     //switch (type)
                     //{
                     //    case 100:
@@ -1084,8 +1127,21 @@ namespace WpfApp1
                         l.ForEach(f =>
                         {
                             f.Status = f.Status == IFalse ? (f.sType == type ? ITrue : IFalse) : ITrue;
+
                         });
                     }
+
+                    l.ForEach(f =>
+                    {
+                        if (f.sType <= type)
+                        {
+                            f.Status = ITrue;
+                        }
+                        else
+                        {
+                            f.Status = IFalse;
+                        }
+                    });
                     //switch (type)
                     //{
                     //    case 106:
@@ -1466,7 +1522,7 @@ namespace WpfApp1
                 {
                     //barList.AddRange(beforeBarList);
                     if (!beforeList.Exists(t => t == barcode))
-                    { 
+                    {
                         barCount += 1;
                     }
                     beforeList = beforeBarList;
