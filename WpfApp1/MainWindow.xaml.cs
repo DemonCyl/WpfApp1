@@ -857,6 +857,10 @@ namespace WpfApp1
                             f.Status = IFalse;
                         }
                     });
+                    if (type == 1400)
+                    {
+                        ClearInfo();
+                    }
                     //switch (type)
                     //{
                     //    case 100:
@@ -944,6 +948,10 @@ namespace WpfApp1
                             f.Status = IFalse;
                         }
                     });
+                    if (type == 1000)
+                    {
+                        ClearInfo();
+                    }
                     //switch (type)
                     //{
                     //    case 100:
@@ -1051,6 +1059,10 @@ namespace WpfApp1
                             f.Status = IFalse;
                         }
                     });
+                    if (type == 2000)
+                    {
+                        ClearInfo();
+                    }
                     //switch (type)
                     //{
                     //    case 100:
@@ -1142,6 +1154,10 @@ namespace WpfApp1
                             f.Status = IFalse;
                         }
                     });
+                    if (type == 1800)
+                    {
+                        ClearInfo();
+                    }
                     //switch (type)
                     //{
                     //    case 106:
@@ -1526,6 +1542,7 @@ namespace WpfApp1
                         barCount += 1;
                     }
                     beforeList = beforeBarList;
+                    fc = fid.ToString();
                 }
             }
 
