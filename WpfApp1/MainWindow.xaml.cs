@@ -18,6 +18,7 @@ using System.IO.Ports;
 using System.Threading;
 using WpfApp1.DAL;
 using System.Linq;
+using System.Windows.Media;
 
 namespace WpfApp1
 {
@@ -60,6 +61,11 @@ namespace WpfApp1
         private List<string> elist = new List<string>();
         private MainDAL dal;
         private Thread thread;
+        private long FIntryID = 0;
+        private string DJCode = null;
+        private string QGCode = null;
+        private string LXCode = null;
+        private string CBCode = null;
 
         public MainWindow()
         {
@@ -114,32 +120,33 @@ namespace WpfApp1
                 InitGw();
 
                 #region PLC连接定时器
-                timer = new System.Windows.Threading.DispatcherTimer();
-                timer.Tick += new EventHandler(ThreadCheck);
-                timer.Interval = new TimeSpan(0, 0, 0, 5);
-                timer.Start();
+                //timer = new System.Windows.Threading.DispatcherTimer();
+                //timer.Tick += new EventHandler(ThreadCheck);
+                //timer.Interval = new TimeSpan(0, 0, 0, 5);
+                //timer.Start();
                 #endregion
 
-                ListViewAutomationPeer lvap = new ListViewAutomationPeer(listView);
-                double rowMark = -1;
-                var listTimer = new DispatcherTimer();
-                listTimer.Tick += (s, e) =>
-                {
-                    var svap = lvap.GetPattern(PatternInterface.Scroll) as ScrollViewerAutomationPeer;
-                    var scroll = svap.Owner as ScrollViewer;
-                    if (rowMark == scroll.VerticalOffset)
-                    {
-                        scroll.ScrollToTop();
-                    }
-                    else
-                    {
-                        rowMark = scroll.VerticalOffset;
-                        scroll.ScrollToVerticalOffset(scroll.VerticalOffset + 1);
-                    }
-                };
-                listTimer.Interval = new TimeSpan(0, 0, 0, 5);
-                listTimer.Start();
-
+                #region cancel
+                //ListViewAutomationPeer lvap = new ListViewAutomationPeer(listView);
+                //double rowMark = -1;
+                //var listTimer = new DispatcherTimer();
+                //listTimer.Tick += (s, e) =>
+                //{
+                //    var svap = lvap.GetPattern(PatternInterface.Scroll) as ScrollViewerAutomationPeer;
+                //    var scroll = svap.Owner as ScrollViewer;
+                //    if (rowMark == scroll.VerticalOffset)
+                //    {
+                //        scroll.ScrollToTop();
+                //    }
+                //    else
+                //    {
+                //        rowMark = scroll.VerticalOffset;
+                //        scroll.ScrollToVerticalOffset(scroll.VerticalOffset + 1);
+                //    }
+                //};
+                //listTimer.Interval = new TimeSpan(0, 0, 0, 5);
+                //listTimer.Start();
+                #endregion
 
             }
             catch (Exception e)
@@ -463,9 +470,26 @@ namespace WpfApp1
                             {
                                 if (!saveMark)
                                 {
-                                    var save = dal.SaveInfo(product.FInterID, process, barList, ReList);
+                                    bool save = false;
+                                    switch (config.GWNo)
+                                    {
+                                        case 04052:
+                                            save = dal.UpdateData4052(FIntryID, ReList);
+                                            break;
+                                        case 04053:
+                                            save = dal.UpdateData4053(FIntryID);
+                                            break;
+                                        case 04061:
+                                            save = dal.UpdateData4061(FIntryID, ReList);
+                                            break;
+                                        case 04063:
+                                            save = dal.UpdateData4063(FIntryID, ReList);
+                                            break;
+                                    }
+                                    //save = dal.SaveInfo(product.FInterID, process, barList, ReList);
                                     if (save)
                                     {
+                                        FIntryID = 0;
                                         splc.Write(service.GetWriteSaveStr(config.GWNo), true);
                                         saveMark = true;
                                         barList.Clear();
@@ -473,6 +497,7 @@ namespace WpfApp1
                                         barCount = 0;
                                         IsWrite = false;
                                         beforeList.Clear();
+                                        DJCode = "";
                                     }
                                 }
                             }
@@ -1270,13 +1295,6 @@ namespace WpfApp1
                         });
                         break;
                     }
-                    //else
-                    //{
-                    //    Dispatcher.InvokeAsync(() =>
-                    //    {
-                    //        ErrorInfo.Text = "";
-                    //    });
-                    //}
                 }
                 if (!errMark)
                 {
@@ -1373,26 +1391,34 @@ namespace WpfApp1
                     XingHao.Text = "副驾";
                     break;
             }
-            BarRule.Text = pro.FCodeRule;
-            if (pro.FCodeRule != string.Empty)
-                yzList.Add(pro.FCodeRule);
+            if (pro.FDianJiCodeRule != string.Empty)
+            {
+                BarRule.Text = "电机:" + pro.FDianJiCodeRule;
+                yzList.Add(pro.FDianJiCodeRule);
+            }
             if (pro.FStatus1 == 1)
             {
-                BarRule.Text += "\r\n" + pro.FCodeRule1;
-                if (pro.FCodeRule1 != string.Empty)
-                    yzList.Add(pro.FCodeRule1);
+                if (pro.FQianGuanCodeRule != string.Empty)
+                {
+                    yzList.Add(pro.FQianGuanCodeRule);
+                    BarRule.Text += "\r\n前管:" + pro.FQianGuanCodeRule;
+                }
             }
             if (pro.FStatus2 == 1)
             {
-                BarRule.Text += "\r\n" + pro.FCodeRule2;
-                if (pro.FCodeRule2 != string.Empty)
-                    yzList.Add(pro.FCodeRule2);
+                if (pro.FLXingCodeRule != string.Empty)
+                {
+                    BarRule.Text += "\r\nL型:" + pro.FLXingCodeRule;
+                    yzList.Add(pro.FLXingCodeRule);
+                }
             }
             if (pro.FStatus3 == 1)
             {
-                BarRule.Text += "\r\n" + pro.FCodeRule3;
-                if (pro.FCodeRule3 != string.Empty)
-                    yzList.Add(pro.FCodeRule3);
+                if (pro.FCeBanCodeRule != string.Empty)
+                {
+                    BarRule.Text += "\r\n侧板:" + pro.FCeBanCodeRule;
+                    yzList.Add(pro.FCeBanCodeRule);
+                }
             }
 
             if (dispatcherTimer.IsEnabled)
@@ -1431,6 +1457,8 @@ namespace WpfApp1
             bool mark = false;
             if (serialPort == null)
             {
+                FIntryID = 0;
+                DJCode = "";
                 barList.Clear();
                 //elist.Clear();
                 barCount = 0;
@@ -1490,90 +1518,119 @@ namespace WpfApp1
 
         private void BarCodeMatch(string barcode)
         {
-            string fc = null;
-            if (yzList.Any() && !IsWrite)
-            {
-                // 防错
-                fc = yzList.Find(f => barcode.Contains(f));
-                //log.Info(barcode);
-                //log.Info(fc);
-                if (fc != null)
-                {
-                    if (elist.FindIndex(f => f.Equals(fc)) != -1)
-                    {
-                        barList.Remove(barList.Find(bar => bar.Contains(fc)));
+            //string fc = null;
+            //if (yzList.Any() && !IsWrite)
+            //{
+            //    // 防错
+            //    fc = yzList.Find(f => barcode.Contains(f));
+            //    //log.Info(barcode);
+            //    //log.Info(fc);
+            //    if (fc != null)
+            //    {
+            //        if (elist.FindIndex(f => f.Equals(fc)) != -1)
+            //        {
+            //            barList.Remove(barList.Find(bar => bar.Contains(fc)));
 
-                        barList.Add(barcode);
-                    }
-                    else
-                    {
-                        elist.Add(fc);
-                        barList.Add(barcode);
-                        barCount += 1;
-                    }
-                }
-            }
-
+            //            barList.Add(barcode);
+            //        }
+            //        else
+            //        {
+            //            elist.Add(fc);
+            //            barList.Add(barcode);
+            //            barCount += 1;
+            //        }
+            //    }
+            //}
+            bool fcmark = false;
             //上工序 判断 04061为起始工位，无需判断 
-            long fid = 0;
             switch (config.GWNo)
             {
                 case 04052:
                     // 判断 上部框架预装
-                    fid = dal.QueryBefore("上部框架预装", barcode);
+                    FIntryID = dal.QueryBefore405(barcode, config.GWNo);
                     break;
                 case 04053:
                     // 判断 上部框架装配
-                    fid = dal.QueryBefore("上部框架装配", barcode);
+                    FIntryID = dal.QueryBefore405(barcode, config.GWNo);
                     break;
                 case 04063:
                     // 判断 H型滑轨装配
-                    fid = dal.QueryBefore("H型滑轨装配", barcode);
+                    FIntryID = dal.QueryBefore4063(barcode);
+                    break;
+                case 04061:
+                    if (!IsWrite) // 电机条码
+                    {
+                        if (barcode.Contains(product.FDianJiCodeRule))
+                        {
+                            if (string.IsNullOrEmpty(DJCode))
+                            {
+                                barCount += 1;
+                            }
+                            DJCode = barcode;
+                            fcmark = true;
+                        }
+                        else
+                        {
+                            fcmark = false;
+                        }
+                    }
                     break;
             }
-            if (fid > 0 && !IsWrite)
+            if (FIntryID > 0 && !IsWrite)
             {
-                var beforeBarList = dal.GetBarCodeList(fid);
-                if (beforeBarList != null && beforeBarList.Any())
-                {
-                    //barList.AddRange(beforeBarList);
-                    if (!beforeList.Exists(t => t == barcode))
-                    {
-                        barCount += 1;
-                    }
-                    beforeList = beforeBarList;
-                    fc = fid.ToString();
-                }
+                barCount += 1;
+                fcmark = true;
             }
+
+            Dispatcher.InvokeAsync(() =>
+            {
+                if (!IsWrite)
+                {
+                    Barcode1.Text = barcode;
+                    Barcode1.Background = fcmark ? Brushes.SteelBlue : Brushes.Red;
+                    switch (config.GWNo)
+                    {
+                        case 04052:
+                            BarErrorInfo.Text = fcmark ? "" : "该条码上工序无数据！";
+                            break;
+                        case 04053:
+                            BarErrorInfo.Text = fcmark ? "" : "该条码上工序无数据！";
+                            break;
+                        case 4061:
+                            BarErrorInfo.Text = fcmark ? "" : "电机条码匹配失败！";
+                            break;
+                        case 04063:
+                            BarErrorInfo.Text = fcmark ? "" : "该条码上工序无数据！";
+                            break;
+                    }
+
+                    BarYz.Text = fcmark ? "OK" : "NG";
+                }
+            });
 
             if (barCount == product.FCodeSum && !IsWrite)
             {
                 // write plc ???  2:OK
                 splc.Write(service.GetSaoMaStr(config.GWNo), 2);
-                barList.AddRange(beforeList);
+                //bool b = false;
+                switch (config.GWNo)
+                {
+                    case 04052:
+                        dal.UpdateBarCode4052(FIntryID);
+                        break;
+                    case 04053:
+                        dal.UpdateBarCode4053(FIntryID);
+                        break;
+                    case 4061:
+                        FIntryID = dal.SaveBarCode406(product.FXingHao, DJCode);
+                        break;
+                    case 04063:
+                        dal.UpdateBarCode4063(FIntryID);
+                        break;
+                }
                 IsWrite = true;
             }
 
-            Dispatcher.InvokeAsync(() =>
-            {
-                switch (barCount % 4)
-                {
-                    case 0:
-                        Barcode4.Text = barcode;
-                        break;
-                    case 1:
-                        Barcode1.Text = barcode;
-                        break;
-                    case 2:
-                        Barcode2.Text = barcode;
-                        break;
-                    case 3:
-                        Barcode3.Text = barcode;
-                        break;
-                }
-
-                BarYz.Text = fc != null ? "OK" : "NG";
-            });
         }
 
         private bool OpenPort()
@@ -1630,7 +1687,10 @@ namespace WpfApp1
 
         private void ClearInfo()
         {
+            FIntryID = 0;
+            DJCode = "";
             Barcode1.Text = "";
+            Barcode1.Background = Brushes.SteelBlue;
             Barcode2.Text = "";
             Barcode3.Text = "";
             Barcode4.Text = "";

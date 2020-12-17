@@ -160,7 +160,6 @@
                 </Border>
                 <Label FontSize="10" Foreground="#F0E68C" Content="总成类型:" FontFamily="Microsoft Yahei" Canvas.Left="10" Canvas.Top="332"/>
                 <Label Canvas.Top="376" Content="型号标识:" FontSize="10" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="10"/>
-                <Label Canvas.Top="404" Content="当前数据:" FontSize="10" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="10"/>
                 <Label Canvas.Left="131" Canvas.Top="332" Content="条码:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
                 <Label Canvas.Left="335" Canvas.Top="328" Content="条码规则:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
                 <Label Canvas.Left="335" Canvas.Top="412" Content="条码验证:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
@@ -186,11 +185,9 @@
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="200" Canvas.Left="17" Canvas.Top="353"/>
                 <TextBlock x:Name="XingHao" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="50" Canvas.Left="62" Canvas.Top="380"/>
-                <TextBlock x:Name="Data" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="50" Canvas.Left="62" Canvas.Top="408"/>
                 <TextBlock x:Name="Barcode1" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="336"/>
-                <TextBlock x:Name="BarRule" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
+                <TextBlock x:Name="BarRule" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="10"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="62" Width="129" Canvas.Left="351" Canvas.Top="348"/>
                 <TextBlock x:Name="BarYz" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="15" Width="47" Canvas.Left="392" Canvas.Top="416"/>
@@ -247,9 +244,11 @@
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="412"/>
                 <Label FontSize="12" Foreground="#F0E68C" Content="报警:" FontFamily="Microsoft Yahei" Canvas.Left="13" Canvas.Top="441"/>
                 <TextBlock x:Name="ErrorInfo" HorizontalAlignment="Left" Foreground="Red" FontFamily="Microsoft Yahei" FontSize="12"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="768" Canvas.Left="62" Canvas.Top="444"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="377" Canvas.Left="62" Canvas.Top="444"/>
                 <TextBlock x:Name="IsOnline" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Center" Height="13" Width="28" Canvas.Left="812"/>
+                <TextBlock x:Name="BarErrorInfo" HorizontalAlignment="Left" Foreground="Red" FontFamily="Microsoft Yahei" FontSize="12"
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="377" Canvas.Left="444" Canvas.Top="444"/>
                 <!--<ListView x:Name="listView_Copy" ItemsSource="{Binding .}" Canvas.Top="64" Height="264" Width="40" Background="#EE3BABFF" FontFamily="Microsoft Yahei" Canvas.Left="10" Foreground="White" >
                     <ListView.Resources>
                         <Style TargetType="{x:Type GridViewColumnHeader}" >

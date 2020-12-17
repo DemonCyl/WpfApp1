@@ -14,9 +14,9 @@
                 <Label Content="总成类别" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="1"/>
                 <Label Content="型号标识:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="54" Width="105" HorizontalContentAlignment="Right"/>
                 <Label Content="PLC通讯标识值:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="273" Visibility="Hidden" Width="105" HorizontalContentAlignment="Right"/>
-                <Label Content="核心件规则:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="118" Width="105" HorizontalContentAlignment="Right"/>
-                <Label Content="条码规则1:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="150" Width="105" HorizontalContentAlignment="Right"/>
-                <Label Content="条码规则2:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="182" Width="105" HorizontalContentAlignment="Right"/>
+                <Label Content="电机条码规则:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="118" Width="105" HorizontalContentAlignment="Right"/>
+                <Label Content="前管条码规则:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="150" Width="105" HorizontalContentAlignment="Right"/>
+                <Label Content="L型条码规则:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="182" Width="105" HorizontalContentAlignment="Right"/>
                 <ComboBox  Height="26" Width="323" pu:ComboBoxHelper.HoverBackground="#1EFFA000" pu:ComboBoxHelper.SelectedBackground="#32FFA000" x:Name="ZCItems" Visibility="Visible" FontFamily="Microsoft Yahei"
                     pu:ComboBoxHelper.CornerRadius="7" Canvas.Left="24" Canvas.Top="28" SelectionChanged="ZCItems_SelectionChanged" />
                 <TextBox x:Name="NewZCItem"  Height="27" Width="323" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13" Visibility="Hidden"
@@ -40,7 +40,7 @@
                     pu:RadioButtonHelper.CheckedBackground="#00FF4F" Canvas.Left="133" Canvas.Top="54" Width="56" FontSize="13" GroupName="XingHaoType" IsChecked="True" />
                 <RadioButton  Height="27" Content="副驾" Background="#323F3F3F" pu:RadioButtonHelper.BoxHeight="16" pu:RadioButtonHelper.BoxWidth="16" Foreground="#F0E68C" x:Name="left"
                     pu:RadioButtonHelper.CheckedBackground="#00FF4F" Canvas.Left="215" Canvas.Top="54" Width="56" FontSize="13" GroupName="XingHaoType" />
-                <Label Content="条码规则3:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="214" Width="105" HorizontalContentAlignment="Right"/>
+                <Label Content="侧板条码规则:" FontSize="13" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="17" Canvas.Top="214" Width="105" HorizontalContentAlignment="Right"/>
                 <TextBox x:Name="codeRule3"  Height="27" Width="151" pu:TextBoxHelper.FocusedBorderBrush="#B5B5B5" Text="" FontFamily="Microsoft Yahei" FontSize="13"  IsEnabled="False"
                     pu:TextBoxHelper.FocusedShadowColor="#B5B5B5" pu:TextBoxHelper.CornerRadius="7" pu:TextBoxHelper.IsClearButtonVisible="True" Canvas.Left="127" Canvas.Top="214" />
                 <CheckBox  Height="27" Content="禁用" pu:CheckBoxHelper.CheckBoxStyle="Switch" pu:CheckBoxHelper.BoxHeight="16"  Foreground="#F0E68C" IsChecked="False"

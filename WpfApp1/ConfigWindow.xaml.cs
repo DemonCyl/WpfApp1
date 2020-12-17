@@ -77,12 +77,12 @@ namespace WpfApp1
             {
                 info = new ProductConfig();
                 info.FZCType = NewZCItem.Text.Trim();
-                info.FCodeRule = codeRule.Text.Trim();
-                info.FCodeRule1 = codeRule1.Text.Trim();
+                info.FDianJiCodeRule = codeRule.Text.Trim();
+                info.FQianGuanCodeRule = codeRule1.Text.Trim();
                 info.FStatus1 = code1.IsChecked.Value ? 1 : 0;
-                info.FCodeRule2 = codeRule2.Text.Trim();
+                info.FLXingCodeRule = codeRule2.Text.Trim();
                 info.FStatus2 = code2.IsChecked.Value ? 1 : 0;
-                info.FCodeRule3 = codeRule3.Text.Trim();
+                info.FCeBanCodeRule = codeRule3.Text.Trim();
                 info.FStatus3 = code3.IsChecked.Value ? 1 : 0;
                 //if (PLCItem.Text.Equals(""))
                 //{
@@ -285,10 +285,10 @@ namespace WpfApp1
                 }
                 //PLCItem.Text = pro.FPLC.ToString();
                 CodeSum.Text = pro.FCodeSum.ToString();
-                codeRule.Text = pro.FCodeRule;
-                codeRule1.Text = pro.FCodeRule1;
-                codeRule2.Text = pro.FCodeRule2;
-                codeRule3.Text = pro.FCodeRule3;
+                codeRule.Text = pro.FDianJiCodeRule;
+                codeRule1.Text = pro.FQianGuanCodeRule;
+                codeRule2.Text = pro.FLXingCodeRule;
+                codeRule3.Text = pro.FCeBanCodeRule;
                 GWItems.SelectedItem = pro.FGWItem;
                 switch (pro.FStatus1)
                 {
