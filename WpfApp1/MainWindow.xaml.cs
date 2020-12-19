@@ -120,10 +120,10 @@ namespace WpfApp1
                 InitGw();
 
                 #region PLC连接定时器
-                //timer = new System.Windows.Threading.DispatcherTimer();
-                //timer.Tick += new EventHandler(ThreadCheck);
-                //timer.Interval = new TimeSpan(0, 0, 0, 5);
-                //timer.Start();
+                timer = new System.Windows.Threading.DispatcherTimer();
+                timer.Tick += new EventHandler(ThreadCheck);
+                timer.Interval = new TimeSpan(0, 0, 0, 5);
+                timer.Start();
                 #endregion
 
                 #region cancel
@@ -1352,15 +1352,19 @@ namespace WpfApp1
             switch (config.GWNo)
             {
                 case 04052:
+                    codeName.Content = "上工序条码:";
                     process = "上部框架装配";
                     break;
                 case 04053:
+                    codeName.Content = "上工序条码:";
                     process = "上部框架卡圈压装";
                     break;
                 case 04061:
+                    codeName.Content = "电机条码:";
                     process = "滑轨马达组件装配";
                     break;
                 case 04063:
+                    codeName.Content = "上工序条码:";
                     process = "下横梁卡圈压装";
                     break;
             }
@@ -1581,11 +1585,13 @@ namespace WpfApp1
                 barCount += 1;
                 fcmark = true;
             }
-
-            Dispatcher.InvokeAsync(() =>
+            //log.Info(barcode);
+            Dispatcher.Invoke(() =>
             {
+                //log.Debug(IsWrite);
                 if (!IsWrite)
                 {
+                    log.Debug(barcode);
                     Barcode1.Text = barcode;
                     Barcode1.Background = fcmark ? Brushes.SteelBlue : Brushes.Red;
                     switch (config.GWNo)
@@ -1622,13 +1628,18 @@ namespace WpfApp1
                         dal.UpdateBarCode4053(FIntryID);
                         break;
                     case 4061:
-                        FIntryID = dal.SaveBarCode406(product.FXingHao, DJCode);
+                        FIntryID = dal.check406(DJCode, product.FXingHao);
+                        if (FIntryID <= 0)
+                        {
+                            FIntryID = dal.SaveBarCode406(product.FXingHao, DJCode);
+                        }
                         break;
                     case 04063:
                         dal.UpdateBarCode4063(FIntryID);
                         break;
                 }
                 IsWrite = true;
+                //log.Debug(FIntryID);
             }
 
         }
@@ -1700,6 +1711,7 @@ namespace WpfApp1
             elist.Clear();
             IsWrite = false;
             beforeList.Clear();
+            BarErrorInfo.Text = "";
         }
     }
 }

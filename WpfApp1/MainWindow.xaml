@@ -160,7 +160,7 @@
                 </Border>
                 <Label FontSize="10" Foreground="#F0E68C" Content="总成类型:" FontFamily="Microsoft Yahei" Canvas.Left="10" Canvas.Top="332"/>
                 <Label Canvas.Top="376" Content="型号标识:" FontSize="10" FontFamily="Microsoft Yahei" Foreground="#F0E68C" Canvas.Left="10"/>
-                <Label Canvas.Left="131" Canvas.Top="332" Content="条码:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
+                <Label Canvas.Left="104" x:Name="codeName" HorizontalContentAlignment="Right" Canvas.Top="332" Content="条码:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C" Width="62"/>
                 <Label Canvas.Left="335" Canvas.Top="328" Content="条码规则:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
                 <Label Canvas.Left="335" Canvas.Top="412" Content="条码验证:" FontFamily="Microsoft Yahei" FontSize="10" Foreground="#F0E68C"/>
 
@@ -182,11 +182,11 @@
                 <TextBlock x:Name="Output" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="83" Canvas.Left="433" Canvas.Top="51"/>
                 <TextBlock x:Name="ZongType" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="200" Canvas.Left="17" Canvas.Top="353"/>
+                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="18" Width="200" Canvas.Left="17" Canvas.Top="357"/>
                 <TextBlock x:Name="XingHao" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei" FontSize="11"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="50" Canvas.Left="62" Canvas.Top="380"/>
                 <TextBlock x:Name="Barcode1" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
-                    TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="336"/>
+                    TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="13" Width="159" Canvas.Left="165" Canvas.Top="336"/>
                 <TextBlock x:Name="BarRule" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="10"
                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="62" Width="129" Canvas.Left="351" Canvas.Top="348"/>
                 <TextBlock x:Name="BarYz" HorizontalAlignment="Left" Foreground="#F0E68C" FontFamily="Microsoft Yahei"  FontSize="11"
