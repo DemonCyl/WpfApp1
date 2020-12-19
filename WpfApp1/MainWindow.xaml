@@ -38,7 +38,7 @@
                             <GradientStop Color="White" Offset="0"/>
                         </LinearGradientBrush>
                     </Border.BorderBrush>
-                    <ListView x:Name="listView" ItemsSource="{Binding .}"  Background="SteelBlue"  >
+                    <ListView x:Name="listView" ItemsSource="{Binding .}"  Background="SteelBlue" >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Stretch" FlowDirection="LeftToRight">
