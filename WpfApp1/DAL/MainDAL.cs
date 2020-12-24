@@ -35,7 +35,7 @@ namespace WpfApp1.DAL
 
         public long QueryBefore4051(string barCode)
         {
-            string sql = $"select t.FInterID from ProcessInfo t where (t.FDianJiBarCode = '{barCode}' or t.FQianGuanBarCode = '{barCode}') and t.F40511Status = 1";
+            string sql = $"select t.FInterID from ProcessInfo t where (t.FDianJiBarCode = '{barCode}' or t.FQianGuanBarCode = '{barCode}') and t.F40511Status = 1 and (t.F40512Status is null or t.F40512Status != 1) ";
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
@@ -46,7 +46,7 @@ namespace WpfApp1.DAL
 
         public long QueryBefore4063(string barCode)
         {
-            string sql = $"select t.FInterID from ProcessInfo t where (t.FDianJiBarCode = '{barCode}' ) and t.F4062Status = 1 ";
+            string sql = $"select t.FInterID from ProcessInfo t where (t.FDianJiBarCode = '{barCode}' ) and t.F4062Status = 1 and (t.FOutStatus is null or t.FOutStatus != 1) ";
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
@@ -60,10 +60,10 @@ namespace WpfApp1.DAL
             string sql = $"select t.FInterID from ProcessInfo t where (t.FDianJiBarCode = '{barCode}' or t.FQianGuanBarCode = '{barCode}' or t.FLXingBarCode = '{barCode}' or t.FCeBanBarCode = '{barCode}') ";
             if (gwNo == 4052)
             {
-                sql += " and t.F40512Status = 1 ";
+                sql += " and t.F40512Status = 1 and (t.F4052Status is null or t.F4052Status != 1) ";
             } else if (gwNo == 4053)
             {
-                sql += " and t.F4052Status = 1 ";
+                sql += " and t.F4052Status = 1 and (t.FOutStatus is null or t.FOutStatus != 1) ";
             }
 
             using (var conn = new DbHelperSQL(config).GetConnection())
