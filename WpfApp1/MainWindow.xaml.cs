@@ -489,15 +489,18 @@ namespace WpfApp1
                                     //save = dal.SaveInfo(product.FInterID, process, barList, ReList);
                                     if (save)
                                     {
-                                        FIntryID = 0;
-                                        splc.Write(service.GetWriteSaveStr(config.GWNo), true);
-                                        saveMark = true;
-                                        barList.Clear();
-                                        elist.Clear();
-                                        barCount = 0;
-                                        IsWrite = false;
-                                        beforeList.Clear();
-                                        DJCode = "";
+                                        var ss = splc.Write(service.GetWriteSaveStr(config.GWNo), true);
+                                        if (ss.IsSuccess)
+                                        {
+                                            FIntryID = 0;
+                                            saveMark = true;
+                                            barList.Clear();
+                                            elist.Clear();
+                                            barCount = 0;
+                                            IsWrite = false;
+                                            beforeList.Clear();
+                                            DJCode = "";
+                                        }
                                     }
                                 }
                             }
