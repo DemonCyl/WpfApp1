@@ -38,7 +38,7 @@ namespace WpfApp1
         private int listNo = 0;
         private string process = "";
         private ProductConfig product;
-        private SerialPort serialPort;
+        private SerialPort serialPort = null;
         //private Plc plc;
         private SiemensS7Net splc;
         private OperateResult connect;
@@ -1675,6 +1675,9 @@ namespace WpfApp1
             if (serialPort != null && serialPort.IsOpen)
             {
                 serialPort.Close();
+                serialPort = null;
+            } else
+            {
                 serialPort = null;
             }
         }
