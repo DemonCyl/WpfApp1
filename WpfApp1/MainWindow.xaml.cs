@@ -152,6 +152,7 @@ namespace WpfApp1
             catch (Exception e)
             {
                 log.Error(e.Message);
+                ErrorInfo.Text = e.Message;
             }
         }
 
@@ -1350,7 +1351,14 @@ namespace WpfApp1
 
         private void InitGw()
         {
-            Gwlist = dal.QueryItem();
+            try
+            {
+                Gwlist = dal.QueryItem();
+            }
+            catch
+            {
+                throw new Exception("数据库连接出错!");
+            }
             process = "";
             switch (config.GWNo)
             {
@@ -1554,15 +1562,15 @@ namespace WpfApp1
             {
                 case 04052:
                     // 判断 上部框架预装
-                    FIntryID = dal.QueryBefore405(barcode, config.GWNo);
+                    FIntryID = dal.QueryBefore405(barcode, config.GWNo, product.FXingHao);
                     break;
                 case 04053:
                     // 判断 上部框架装配
-                    FIntryID = dal.QueryBefore405(barcode, config.GWNo);
+                    FIntryID = dal.QueryBefore405(barcode, config.GWNo, product.FXingHao);
                     break;
                 case 04063:
                     // 判断 H型滑轨装配
-                    FIntryID = dal.QueryBefore4063(barcode);
+                    FIntryID = dal.QueryBefore4063(barcode, product.FXingHao);
                     break;
                 case 04061:
                     if (!IsWrite) // 电机条码
