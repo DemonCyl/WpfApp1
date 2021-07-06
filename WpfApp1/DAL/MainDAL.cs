@@ -310,6 +310,7 @@ namespace WpfApp1.DAL
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
+                log.Info(sql + "\r\n" + fid);
                 return conn.Execute(sql, new
                 {
                     Id = fid,
@@ -347,6 +348,7 @@ namespace WpfApp1.DAL
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
+                log.Info(sql + "\r\n" + fid);
                 return conn.Execute(sql, new
                 {
                     F1 = data1.Torque,
@@ -367,6 +369,7 @@ namespace WpfApp1.DAL
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
+                log.Info(sql + "\r\n" + fid);
                 return conn.Execute(sql, new
                 {
                     Id = fid,
@@ -379,6 +382,7 @@ namespace WpfApp1.DAL
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
+                log.Info(sql + "\r\n" + fid);
                 return conn.Execute(sql, new
                 {
                     Id = fid,
@@ -406,6 +410,7 @@ namespace WpfApp1.DAL
                     id = Convert.ToInt64(cmd.ExecuteScalar());
 
                     tran.Commit();
+                    log.Info("406Save: " + id);
                     return id;
                 }
                 catch (Exception ex)
@@ -443,6 +448,7 @@ namespace WpfApp1.DAL
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
+                log.Info(sql + "\r\n" + fid);
                 return conn.Execute(sql, new
                 {
                     F1 = data1.Torque,
@@ -519,6 +525,7 @@ namespace WpfApp1.DAL
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
+                log.Info(sql + "\r\n" + fid);
                 return conn.Execute(sql, new
                 {
                     Id = fid,
@@ -545,6 +552,7 @@ namespace WpfApp1.DAL
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
+                log.Info(sql + "\r\n" + fid);
                 return conn.Execute(sql, new
                 {
                     F1 = data1.Torque,
@@ -556,11 +564,12 @@ namespace WpfApp1.DAL
 
         public long check406(string barcode,int xinghao)
         {
-            string sql = $"select t.FInterID from ProcessInfo t where (t.FDianJiBarCode = '{barcode}' ) and (t.F4061Status is null or t.F4061Status != 1) and t.FGW = '406' and FXingHao = {xinghao}";
+            string sql = $"select t.FInterID from ProcessInfo t where (t.FDianJiBarCode = '{barcode}' )  and t.FGW = '406' and FXingHao = {xinghao}"; //and (t.F4061Status is null or t.F4061Status != 1)
 
             using (var conn = new DbHelperSQL(config).GetConnection())
             {
                 var re = conn.QueryFirstOrDefault<long>(sql);
+                log.Info(sql + "\r\n" + re);
                 return re;
             }
         }

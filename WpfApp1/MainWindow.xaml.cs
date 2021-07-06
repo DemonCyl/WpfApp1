@@ -475,16 +475,25 @@ namespace WpfApp1
                                     switch (config.GWNo)
                                     {
                                         case 04052:
-                                            save = dal.UpdateData4052(FIntryID, ReList);
+                                            if (ReList.Count >= 4)
+                                            {
+                                                save = dal.UpdateData4052(FIntryID, ReList);
+                                            }
                                             break;
                                         case 04053:
                                             save = dal.UpdateData4053(FIntryID);
                                             break;
                                         case 04061:
-                                            save = dal.UpdateData4061(FIntryID, ReList);
+                                            if (ReList.Count >= 3)
+                                            {
+                                                save = dal.UpdateData4061(FIntryID, ReList);
+                                            }
                                             break;
                                         case 04063:
-                                            save = dal.UpdateData4063(FIntryID, ReList);
+                                            if (ReList.Count >= 1)
+                                            {
+                                                save = dal.UpdateData4063(FIntryID, ReList);
+                                            }
                                             break;
                                     }
                                     //save = dal.SaveInfo(product.FInterID, process, barList, ReList);
@@ -1684,7 +1693,8 @@ namespace WpfApp1
             {
                 serialPort.Close();
                 serialPort = null;
-            } else
+            }
+            else
             {
                 serialPort = null;
             }
