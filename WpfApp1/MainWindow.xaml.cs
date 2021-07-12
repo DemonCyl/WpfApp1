@@ -44,6 +44,7 @@ namespace WpfApp1
         private OperateResult connect;
         private GDbStr GunStr;
         private int markN = 0;
+        private int listMark = 0;
         private bool IsOn = false;
         private bool IsWrite = false;
         private int barCount = 0;
@@ -479,6 +480,10 @@ namespace WpfApp1
                                             {
                                                 save = dal.UpdateData4052(FIntryID, ReList);
                                             }
+                                            else
+                                            {
+                                                listMark += 1;
+                                            }
                                             break;
                                         case 04053:
                                             save = dal.UpdateData4053(FIntryID);
@@ -488,11 +493,19 @@ namespace WpfApp1
                                             {
                                                 save = dal.UpdateData4061(FIntryID, ReList);
                                             }
+                                            else
+                                            {
+                                                listMark += 1;
+                                            }
                                             break;
                                         case 04063:
                                             if (ReList.Count >= 1)
                                             {
                                                 save = dal.UpdateData4063(FIntryID, ReList);
+                                            }
+                                            else
+                                            {
+                                                listMark += 1;
                                             }
                                             break;
                                     }
@@ -510,7 +523,16 @@ namespace WpfApp1
                                             IsWrite = false;
                                             beforeList.Clear();
                                             DJCode = "";
+                                            listMark = 0;
                                         }
+                                    }
+                                    if (listMark >= 10) // 10次读取不完整拧紧枪数据自动NG
+                                    {
+                                        BarErrorInfo.Text = "拧紧枪数据读取不完整，请复位重做！";
+                                    }
+                                    else
+                                    {
+                                        BarErrorInfo.Text = "";
                                     }
                                 }
                             }
@@ -895,7 +917,7 @@ namespace WpfApp1
                             f.Status = IFalse;
                         }
                     });
-                    if (type == 1400)
+                    if (type == 1350)
                     {
                         ClearInfo();
                     }
@@ -1736,6 +1758,7 @@ namespace WpfApp1
             IsWrite = false;
             beforeList.Clear();
             BarErrorInfo.Text = "";
+            listMark = 0;
         }
     }
 }
